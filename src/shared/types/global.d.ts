@@ -3,7 +3,6 @@ declare global {
   type RequestError = {
     error?: {
       message: string;
-      status: number;
     };
   };
   type Nullable<T> = T | undefined | null;
