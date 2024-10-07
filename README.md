@@ -1,0 +1,1 @@
+Queue Web using Vite React TypeScript and Tailwindcss
