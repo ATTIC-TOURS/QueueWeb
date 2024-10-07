@@ -1,4 +1,4 @@
-export const branch_names: readonly string[]  = [
+export const branch_names = [
     "MAIN OFFICE",
     "SM MEGAMALL",
     "SM MALL OF ASIA",
@@ -8,4 +8,4 @@ export const branch_names: readonly string[]  = [
     "SM SOUTHMALL",
     "SM DAVAO",
     "SM CEBU"
-  ];
+  ] as const;

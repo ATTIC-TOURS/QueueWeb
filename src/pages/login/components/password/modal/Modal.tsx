@@ -1,7 +1,7 @@
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useEffect, useState } from "react";
-import { ModalContext } from "../../../shared/modal-ctx";
+import { LoginModalContext } from "../../../shared/context/modal-ctx";
 import "./modal.css";
 import Wrapper from "../../../../../components/wrapper/Wrapper";
 import PasswordForm from "../form/form";
@@ -11,11 +11,10 @@ export default function PasswordModal({
 }: {
   chosen_branch: string;
 }) {
-  const { setModalStatus } = useContext(ModalContext);
+  const { setModalStatus } = useContext(LoginModalContext);
   const [close_modal, setCloseModal] = useState(false);
 
   const handleCloseModal = () => {
-    console.log("handleCloseModal");
     setTimeout(() => {
       setModalStatus(false);
     }, 100);
