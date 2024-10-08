@@ -20,9 +20,6 @@ export default function PasswordForm() {
   });
 
   const branch_id = useSelector((state: IRootState) => state.branch.id);
-  const branch_name = useSelector((state: IRootState) => state.branch.name);
-
-  console.log(branch_name);
 
   const [$login, { isLoading, isError, data: res }] = useLoginMutation();
 
@@ -41,7 +38,6 @@ export default function PasswordForm() {
   }, [branch_id, setValue]);
 
   useEffect(() => {
-    console.log(branch_id);
     if (res) {
       if (res.status) {
         window.location.reload();
