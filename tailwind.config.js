@@ -16,6 +16,7 @@ export default {
         'rose-pink': 'var(--rose-pink)',
         'white-wash': 'var(--white-wash)',
         'blood-red': 'var(--blood-red)',
+        "blue-ribbon": 'var(--blue-ribbon)',
       },
       screens: {
         'xs': '320px',
