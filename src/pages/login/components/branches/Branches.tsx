@@ -1,17 +1,22 @@
 import { useContext } from "react";
 import { LoginModalContext } from "../../shared/context/modal-ctx";
 import { useBranchesQuery } from "../../shared/api/auth";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../../shared/stores/auth";
+import { setBranchName, setBranchId } from "../../../../shared/stores/branch";
 
 export default function Branches() {
-  const { setModalStatus, setModalTitle, setBranchId } =
+  const { setModalStatus } =
     useContext(LoginModalContext);
 
   const { data: branches, error, isLoading } = useBranchesQuery();
 
+  const dispatch = useDispatch<AppDispatch>();
+
   const handleBranchClick = (branch_name: string, branch_id: string) => {
     setModalStatus(true);
-    setModalTitle(branch_name);
-    setBranchId(branch_id);
+    dispatch(setBranchId(branch_id));
+    dispatch(setBranchName(branch_name));
   };
 
   return (
@@ -29,7 +34,7 @@ export default function Branches() {
             return (
               <button
                 key={index}
-                onClick={() => handleBranchClick(branch.name, branch.id)}
+                onClick={() => handleBranchClick(branch.name, branch.id.toString())}
                 className="bg-blood-red w-full px-3 py-6 text-white-wash font-bold rounded border-4 border-white-wash shadow-xl hover:bg-red-500"
               >
                 {branch.name}
