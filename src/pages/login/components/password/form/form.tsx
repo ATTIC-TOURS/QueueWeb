@@ -2,10 +2,11 @@ import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
 import { LoginType } from "../../../../../shared/types/login";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginSchema } from "../../../../../shared/validators/login";
-import { useContext, useEffect } from "react";
-import { LoginModalContext } from "../../../shared/context/modal-ctx";
+import { useEffect } from "react";
 import { useLoginMutation } from "../../../shared/api/auth";
 import { toast } from "sonner";
+import { useSelector } from "react-redux";
+import { IRootState } from "../../../../../shared/stores/auth";
 
 export default function PasswordForm() {
   const {
@@ -18,26 +19,29 @@ export default function PasswordForm() {
     resolver: zodResolver(LoginSchema),
   });
 
-  const { branch_id } = useContext(LoginModalContext);
+  const branch_id = useSelector((state: IRootState) => state.branch.id);
+  const branch_name = useSelector((state: IRootState) => state.branch.name);
+
+  console.log(branch_name);
 
   const [$login, { isLoading, isError, data: res }] = useLoginMutation();
 
   const handleLogin: SubmitHandler<LoginType> = async (data) => {
     await $login(data);
-
   };
 
   const handleError: SubmitErrorHandler<LoginType> = (errors) => {
     console.log(errors);
   };
 
-  
   useEffect(() => {
-    setValue("id", branch_id.toString());
+    if (branch_id) {
+      setValue("id", branch_id);
+    }
   }, [branch_id, setValue]);
 
   useEffect(() => {
-    console.log(res);
+    console.log(branch_id);
     if (res) {
       if (res.status) {
         window.location.reload();
@@ -45,7 +49,10 @@ export default function PasswordForm() {
         toast.error("Invalid Password");
         sessionStorage.removeItem("is_authenticated");
         reset();
-        setValue("id", branch_id.toString());
+        if (!branch_id) {
+          window.location.reload();
+        }
+        setValue("id", branch_id!);
       }
     }
   }, [res, reset, setValue, branch_id]);

@@ -5,14 +5,16 @@ import { LoginModalContext } from "../../../shared/context/modal-ctx";
 import "./modal.css";
 import Wrapper from "../../../../../components/wrapper/Wrapper";
 import PasswordForm from "../form/form";
+import { useSelector } from "react-redux";
+import { IRootState } from "../../../../../shared/stores/auth";
 
-export default function PasswordModal({
-  chosen_branch,
-}: {
-  chosen_branch: string;
-}) {
+export default function PasswordModal() {
   const { setModalStatus } = useContext(LoginModalContext);
   const [close_modal, setCloseModal] = useState(false);
+
+  const chosen_branch = useSelector(
+    (state: IRootState) => state.branch.name
+  );
 
   const handleCloseModal = () => {
     setTimeout(() => {
