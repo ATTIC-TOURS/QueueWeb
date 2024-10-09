@@ -26,3 +26,12 @@ export const QueueWindowSchema = z.object({
     "Korean Visa Window",
   ]),
 });
+
+export const CurrentStatusSchema = z.object({
+  cancel: z.number(),
+  complete: z.number(),
+  finish: z.number(),
+  ["in-progress"]: z.number(),
+  pending: z.number(),
+  waiting: z.number(),
+});

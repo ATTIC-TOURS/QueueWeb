@@ -1,37 +1,15 @@
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useContext, useEffect, useState } from "react";
-import { LoginModalContext } from "../../../shared/context/modal-ctx";
-import "./modal.css";
 import Wrapper from "../../../../../components/wrapper/Wrapper";
 import PasswordForm from "../form/form";
 import { useSelector } from "react-redux";
-import { IRootState } from "../../../../../shared/stores/auth";
+import { IRootState } from "../../../../../shared/stores/app";
+import { useModalWrapper } from "../../../../../hooks/useModalWrapper";
 
 export default function PasswordModal() {
-  const { setModalStatus } = useContext(LoginModalContext);
-  const [close_modal, setCloseModal] = useState(false);
+  const { handleCloseModal, close_modal, handleModalClick } = useModalWrapper("Login");
 
-  const chosen_branch = useSelector(
-    (state: IRootState) => state.branch.name
-  );
-
-  const handleCloseModal = () => {
-    setTimeout(() => {
-      setModalStatus(false);
-    }, 100);
-    setCloseModal(true);
-  };
-
-  useEffect(() => {
-    setTimeout(() => {
-      setCloseModal(false);
-    }, 100);
-  }, [close_modal]);
-
-  const handleModalClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-  };
+  const chosen_branch = useSelector((state: IRootState) => state.branch.name);
 
   return (
     <>

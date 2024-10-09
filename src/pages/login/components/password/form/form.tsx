@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { useLoginMutation } from "../../../shared/api/auth";
 import { toast } from "sonner";
 import { useSelector } from "react-redux";
-import { IRootState } from "../../../../../shared/stores/auth";
+import { IRootState } from "../../../../../shared/stores/app";
 
 export default function PasswordForm() {
   const {
