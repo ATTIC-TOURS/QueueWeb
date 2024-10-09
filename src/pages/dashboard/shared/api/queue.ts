@@ -61,5 +61,6 @@ export const {
   useLazyWindowQuery,
   useCurrentStatusQuery,
   useLazyViewableStatusQuery,
-  useQueueCallMutation
+  useQueueCallMutation,
+  useQueueUpdateMutation,
 } = queueAPI;
