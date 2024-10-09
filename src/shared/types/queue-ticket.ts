@@ -1,8 +1,10 @@
 import { z } from "zod";
 import {
   CurrentStatusSchema,
+  QueueCallSchema,
   QueueServiceSchema,
   QueueTicketSchema,
+  QueueUpdateSchema,
   QueueWindowSchema,
 } from "../validators/queue-ticket";
 
@@ -21,3 +23,9 @@ export type QueueWindowListType = QueueServiceType[];
 export type CurrentStatusType = z.infer<typeof CurrentStatusSchema>;
 
 export type ModalTitleType = "Login" | "Call" | "Done" | null;
+
+export type StatusType = "Complete" | "Pending" | "Cancel";
+
+export type QueueCallType = z.infer<typeof QueueCallSchema>;
+
+export type QueueUpdateType = z.infer<typeof QueueUpdateSchema>;

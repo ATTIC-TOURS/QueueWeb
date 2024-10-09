@@ -35,3 +35,13 @@ export const CurrentStatusSchema = z.object({
   pending: z.number(),
   waiting: z.number(),
 });
+
+export const QueueCallSchema = z.object({
+  queue_id: z.string().min(1),
+  window_id: z.string().min(1),
+});
+
+export const QueueUpdateSchema = z.object({
+  queue_id: z.string().min(1),
+  status_id: z.string().min(1),
+});
