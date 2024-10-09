@@ -6,6 +6,7 @@ import { persistReducer, persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, 
 import { persist_config } from "../../configs/persistor";
 import { queueAPI } from "../../pages/dashboard/shared/api/queue";
 import modalReducer from "./modal";
+import ticketReducer from "./ticket";
 
 
 const reducer = combineReducers({
@@ -13,6 +14,7 @@ const reducer = combineReducers({
   branch: branchReducer,
   [queueAPI.reducerPath]: queueAPI.reducer,
   modal: modalReducer,
+  ticket: ticketReducer,
 });
 
 const persistedReducer = persistReducer(persist_config, reducer)
