@@ -5,12 +5,14 @@ import branchReducer from "./branch";
 import { persistReducer, persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
 import { persist_config } from "../../configs/persistor";
 import { queueAPI } from "../../pages/dashboard/shared/api/queue";
+import modalReducer from "./modal";
 
 
 const reducer = combineReducers({
   [authAPI.reducerPath]: authAPI.reducer,
   branch: branchReducer,
   [queueAPI.reducerPath]: queueAPI.reducer,
+  modal: modalReducer,
 });
 
 const persistedReducer = persistReducer(persist_config, reducer)
