@@ -1,75 +1,21 @@
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  useLazyServiceQuery,
-  useLazyWindowQuery,
-  useQueueQuery,
-} from "../../shared/api/queue";
+import { useQueueQuery } from "../../shared/api/queue";
 import { useSelector } from "react-redux";
-import { IRootState } from "../../../../shared/stores/auth";
-import { useState, useEffect, useCallback } from "react";
-import {
-  QueueServiceType,
-  QueueWindowListType,
-} from "../../../../shared/types/queue-ticket";
+import { IRootState } from "../../../../shared/stores/app";
 import { FormatTime } from "../../../../utils/time-formatter";
+import { useServices } from "../../../../hooks/useServices";
+import { useWindows } from "../../../../hooks/useWindows";
+import TableActions from "./components/actions/TableActions";
 
 export default function TransactionTable() {
   const id = useSelector((state: IRootState) => state.branch.id);
 
-  const [services, setServices] = useState<QueueServiceType[]>([]);
-
-  const [windows, setWindows] = useState<QueueWindowListType>([]);
-
   const { data: tickets, isSuccess: isTicketSuccess } = useQueueQuery(id ?? "");
 
-  const [fetchService, { isLoading: isServicesLoading }] =
-    useLazyServiceQuery();
+  const { isServicesLoading, services_name } = useServices();
 
-  const [fetchWindow, { isLoading: isWindowLoading }] = useLazyWindowQuery();
-
-  useEffect(() => {
-    const fetchServices = async () => {
-      if (isTicketSuccess && tickets) {
-        const service_promises = tickets.map((ticket) =>
-          ticket.service_id
-            ? fetchService(ticket.service_id).unwrap()
-            : Promise.resolve(null)
-        );
-        const fetched_services = await Promise.all(service_promises);
-        setServices(
-          fetched_services.filter(
-            (service) => service !== null
-          ) as QueueServiceType[]
-        );
-      }
-    };
-
-    fetchServices();
-  }, [isTicketSuccess, tickets, fetchService]);
-
-  useEffect(() => {
-    const fetchWindows = async () => {
-      const windows = await fetchWindow().unwrap();
-      setWindows(windows);
-    };
-
-    fetchWindows();
-  }, [fetchWindow]);
-
-  const services_name = useCallback(
-    (service_id: string) => {
-      return services.find((service) => service.id === service_id)?.name;
-    },
-    [services]
-  );
-
-  const windows_name = useCallback(
-    (window_id: string) => {
-      return windows.find((window) => window.id === window_id)?.name;
-    },
-    [windows]
-  );
+  const { isWindowLoading, windows_name } = useWindows();
 
   if (!id) return <div>No branch ID available</div>;
   if (!isTicketSuccess) return <div>Loading tickets...</div>;
@@ -77,7 +23,7 @@ export default function TransactionTable() {
   if (isWindowLoading) return <div>Loading windows...</div>;
 
   return (
-    <div className="px-16">
+    <div className="md:px-16 max-md:px-2 mb-5">
       <table className=" w-full">
         <thead className="">
           <tr>
@@ -107,12 +53,7 @@ export default function TransactionTable() {
               <td className="text-center">{FormatTime(item.created_at)}</td>
               <td className="text-center">{windows_name(item.window_id)}</td>
               <td className="py-3 text-center ">
-                <button className="bg-blue-ribbon text-white w-20 py-1 rounded mr-3">
-                  Call
-                </button>
-                <button className="bg-crimson text-white w-20 py-1 rounded">
-                  Update
-                </button>
+                <TableActions ticket={item} />
               </td>
             </tr>
           ))}
