@@ -1,6 +1,6 @@
 import { faClock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import attic_logo from "../../../../assets/images/attic-logo.png";
+import attic_logo from "../../../../assets/images/attic-logo-white.png";
 
 export default function Sidebar() {
   return (
@@ -8,7 +8,7 @@ export default function Sidebar() {
       <img
         src={attic_logo}
         alt="Attic Tours Logo"
-        className="h-10 w-1/2 mx-auto"
+        className="h-8 mx-auto"
       />
       <div className="flex justify-center mt-5">
         <FontAwesomeIcon icon={faClock} color="white" className="h-10 w-1/2" />
