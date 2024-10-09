@@ -3,6 +3,7 @@ import {
   CurrentStatusSchema,
   QueueCallSchema,
   QueueServiceSchema,
+  QueueStatusSchema,
   QueueTicketSchema,
   QueueUpdateSchema,
   QueueWindowSchema,
@@ -24,8 +25,9 @@ export type CurrentStatusType = z.infer<typeof CurrentStatusSchema>;
 
 export type ModalTitleType = "Login" | "Call" | "Done" | null;
 
-export type StatusType = "Complete" | "Pending" | "Cancel";
+export type StatusType = z.infer<typeof QueueStatusSchema>;
 
 export type QueueCallType = z.infer<typeof QueueCallSchema>;
 
 export type QueueUpdateType = z.infer<typeof QueueUpdateSchema>;
+
