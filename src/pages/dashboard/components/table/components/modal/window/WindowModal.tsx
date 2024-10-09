@@ -25,10 +25,10 @@ export default function WindowModal() {
     resolver: zodResolver(QueueCallSchema),
   });
 
-  const [$queue_call] = useQueueCallMutation();
+  const [$queueCall] = useQueueCallMutation();
 
   const handleCall: SubmitHandler<QueueCallType> = async (data) => {
-    await $queue_call(data);
+    await $queueCall(data);
     window.location.reload();
   };
 

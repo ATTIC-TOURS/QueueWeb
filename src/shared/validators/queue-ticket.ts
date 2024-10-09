@@ -45,3 +45,8 @@ export const QueueUpdateSchema = z.object({
   queue_id: z.string().min(1),
   status_id: z.string().min(1),
 });
+
+export const QueueStatusSchema = z.object({
+  id: z.string().min(1),
+  name: z.enum(["complete", "pending", "cancel"]),
+});
