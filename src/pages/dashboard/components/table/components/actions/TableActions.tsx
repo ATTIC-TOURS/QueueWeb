@@ -5,6 +5,7 @@ import {
   IModalState,
   setModalStatus,
 } from "../../../../../../shared/stores/modal";
+import { setTicket } from "../../../../../../shared/stores/ticket";
 
 export default function TableActions({ ticket }: { ticket: QueueTicketType }) {
   const dispatch = useDispatch<AppDispatch>();
@@ -15,6 +16,7 @@ export default function TableActions({ ticket }: { ticket: QueueTicketType }) {
       modalFor: "Call",
     };
     dispatch(setModalStatus(modal_status));
+    dispatch(setTicket(ticket));
   };
 
   const handleDone = () => {
@@ -23,6 +25,7 @@ export default function TableActions({ ticket }: { ticket: QueueTicketType }) {
       modalFor: "Done",
     };
     dispatch(setModalStatus(modal_status));
+    dispatch(setTicket(ticket));
   };
 
   return (
@@ -34,8 +37,13 @@ export default function TableActions({ ticket }: { ticket: QueueTicketType }) {
         Call
       </button>
       <button
-        className="bg-blood-red text-white w-20 py-1 rounded"
+        className={`${
+          !ticket.is_called
+            ? "bg-rose-pink text-white w-20 py-1 rounded"
+            : "bg-blood-red text-white-wash w-20 py-1 rounded"
+        } md:mr-3 max-md:mb-3`}
         onClick={handleDone}
+        disabled={!ticket.is_called}
       >
         Done
       </button>

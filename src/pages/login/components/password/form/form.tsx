@@ -63,6 +63,7 @@ export default function PasswordForm() {
         <input
           type="password"
           className="shadow appearance-none border rounded w-full py-2 px-1 mb-2 bg-white-wash outline-none"
+          autoFocus
           {...register("password")}
         />
         {errors.password && (
