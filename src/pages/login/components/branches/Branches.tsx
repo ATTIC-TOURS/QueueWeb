@@ -1,20 +1,17 @@
-import { useContext } from "react";
-import { LoginModalContext } from "../../shared/context/modal-ctx";
 import { useBranchesQuery } from "../../shared/api/auth";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../../shared/stores/auth";
+import { AppDispatch } from "../../../../shared/stores/app";
 import { setBranchName, setBranchId } from "../../../../shared/stores/branch";
+import { IModalState, setModalStatus } from "../../../../shared/stores/modal";
 
 export default function Branches() {
-  const { setModalStatus } =
-    useContext(LoginModalContext);
-
   const { data: branches, error, isLoading } = useBranchesQuery();
 
   const dispatch = useDispatch<AppDispatch>();
 
   const handleBranchClick = (branch_name: string, branch_id: string) => {
-    setModalStatus(true);
+    const modal_status: IModalState = { active: true, modalFor: "Login" };
+    dispatch(setModalStatus(modal_status));
     dispatch(setBranchId(branch_id));
     dispatch(setBranchName(branch_name));
   };
@@ -34,7 +31,9 @@ export default function Branches() {
             return (
               <button
                 key={index}
-                onClick={() => handleBranchClick(branch.name, branch.id.toString())}
+                onClick={() =>
+                  handleBranchClick(branch.name, branch.id.toString())
+                }
                 className="bg-blood-red w-full px-3 py-6 text-white-wash font-bold rounded border-4 border-white-wash shadow-xl hover:bg-red-500"
               >
                 {branch.name}
