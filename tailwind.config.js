@@ -17,6 +17,7 @@ export default {
         'white-wash': 'var(--white-wash)',
         'blood-red': 'var(--blood-red)',
         "blue-ribbon": 'var(--blue-ribbon)',
+        "light-red": 'var(--light-red)',
       },
       screens: {
         'xs': '320px',
