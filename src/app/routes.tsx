@@ -3,6 +3,7 @@ import Login from "../pages/login/Login";
 import PageNotFound from "../pages/404/PageNotFound";
 import Dashboard from "../pages/dashboard/Dashboard";
 import AuthMiddleware from "../shared/middlewares/AuthMiddleware";
+import ApplicantTV from "../pages/tv/ApplicantTV";
 
 const is_authenticated = sessionStorage.getItem("is_authenticated");
 
@@ -14,6 +15,14 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <AuthMiddleware child={<Dashboard />} />,
+  },
+  {
+    path: "/in-progress",
+    element: <AuthMiddleware child={<ApplicantTV />} />,
+  },
+  {
+    path: "/waiting",
+    element: <AuthMiddleware child={<ApplicantTV />} />,
   },
   {
     path: "*",

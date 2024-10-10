@@ -23,11 +23,16 @@ export type QueueWindowListType = QueueServiceType[];
 
 export type CurrentStatusType = z.infer<typeof CurrentStatusSchema>;
 
-export type ModalTitleType = "Login" | "Call" | "Done" | null;
+export type ModalTitleType =
+  | "Login"
+  | "Call"
+  | "Done"
+  | "waiting"
+  | "in-progress"
+  | null;
 
 export type StatusType = z.infer<typeof QueueStatusSchema>;
 
 export type QueueCallType = z.infer<typeof QueueCallSchema>;
 
 export type QueueUpdateType = z.infer<typeof QueueUpdateSchema>;
-

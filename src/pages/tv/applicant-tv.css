@@ -1,0 +1,87 @@
+.tv-bg {
+  background-image: url("../../assets/images/TV-bg.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.tv-screen {
+  display: grid;
+  grid-template-areas:
+    "left-tv right-tv"
+    "foot-tv foot-tv";
+  grid-template-columns: 2fr 1fr;
+}
+
+.left-tv {
+  grid-area: left-tv;
+}
+
+.right-tv {
+  grid-area: right-tv;
+}
+
+.foot-tv {
+  grid-area: foot-tv;
+}
+
+.in-prog-list:nth-child(odd) {
+  background-color: var(--light-red);
+}
+
+#scroll-container {
+  overflow: hidden;
+}
+
+#scroll-text {
+  -moz-transform: translateX(100%);
+  -webkit-transform: translateX(100%);
+  transform: translateX(100%);
+
+  -moz-animation: my-animation 15s linear infinite;
+  -webkit-animation: my-animation 15s linear infinite;
+  animation: my-animation 15s linear infinite;
+}
+
+@keyframes my-animation {
+  from {
+    -moz-transform: translateX(100%);
+    -webkit-transform: translateX(100%);
+    transform: translateX(100%);
+  }
+  to {
+    -moz-transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
+    transform: translateX(-100%);
+  }
+}
+
+/* for Firefox */
+@-moz-keyframes my-animation {
+  from {
+    -moz-transform: translateX(100%);
+  }
+  to {
+    -moz-transform: translateX(-100%);
+  }
+}
+
+/* for Chrome */
+@-webkit-keyframes my-animation {
+  from {
+    -webkit-transform: translateX(100%);
+  }
+  to {
+    -webkit-transform: translateX(-100%);
+  }
+}
+
+@media (max-width: 640px) {
+  .tv-screen {
+    grid-template-areas:
+      "left-tv"
+      "right-tv"
+      "foot-tv";
+    grid-template-columns: 1fr;
+  }
+}
