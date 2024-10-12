@@ -1,14 +1,16 @@
+import { useLatestTicket } from "../../../../hooks/useLatestTicket";
 import { useModalWrapper } from "../../../../hooks/useModalWrapper";
-import Applied from "./content/apply/Applied";
+import { useWindows } from "../../../../hooks/useWindows";
 import Called from "./content/call/Called";
 
-export default function Notifier({
-  title,
-}: {
-  title: "waiting" | "in-progress";
-}) {
-  const { handleModalClick, close_modal } = useModalWrapper(title);
+export default function Notifier() {
+  const { handleModalClick, close_modal } = useModalWrapper("waiting");
 
+  const { latest_ticket } = useLatestTicket();
+
+  const { windows_name } = useWindows();
+
+  console.log(latest_ticket, "!!!!!!!");
   return (
     <>
       <div
@@ -17,8 +19,10 @@ export default function Notifier({
         }`}
         onClick={handleModalClick}
       >
-        {/* <Applied /> */}
-        <Called />
+        <h1 className="text-9xl pb-6">
+          {windows_name(latest_ticket?.window_id ?? "")}
+        </h1>
+        <h3 className="text-9xl font-bold">{latest_ticket?.queue_no}</h3>
       </div>
     </>
   );

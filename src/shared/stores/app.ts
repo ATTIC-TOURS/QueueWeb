@@ -7,6 +7,7 @@ import { persist_config } from "../../configs/persistor";
 import { queueAPI } from "../../pages/dashboard/shared/api/queue";
 import modalReducer from "./modal";
 import ticketReducer from "./ticket";
+import { tvAPI } from "../../pages/tv/shared/api/tv";
 
 
 const reducer = combineReducers({
@@ -15,6 +16,7 @@ const reducer = combineReducers({
   [queueAPI.reducerPath]: queueAPI.reducer,
   modal: modalReducer,
   ticket: ticketReducer,
+  [tvAPI.reducerPath]: tvAPI.reducer,
 });
 
 const persistedReducer = persistReducer(persist_config, reducer)
@@ -26,7 +28,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(authAPI.middleware).concat(queueAPI.middleware),
+    }).concat(authAPI.middleware).concat(queueAPI.middleware).concat(tvAPI.middleware),
 });
 
 setupListeners(store.dispatch);

@@ -9,6 +9,7 @@ export default function ModalWrapper({
   onClick?: () => void;
 }) {
   const { active } = useSelector((state: IRootState) => state.modal);
+
   return (
     <>
       {active && (

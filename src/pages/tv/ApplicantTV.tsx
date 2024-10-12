@@ -8,28 +8,16 @@ import WaitingQueue from "./components/waiting/WaitingQueue";
 import ModalWrapper from "../../components/wrapper/Wrapper";
 import Notifier from "./components/notifier/Notification";
 import { useModalWrapper } from "../../hooks/useModalWrapper";
-import { useDispatch, useSelector } from "react-redux";
-import { IModalState, setModalStatus } from "../../shared/stores/modal";
-import { AppDispatch } from "../../shared/stores/app";
-import { useLayoutEffect } from "react";
+import { useLatestTicket } from "../../hooks/useLatestTicket";
 
 export default function ApplicantTV() {
   const current_view = window.location.href.split("/")[3] as
     | "waiting"
     | "in-progress";
 
-  const modal_for = useSelector((state: IModalState) => state.modalFor);
-
-  console.log(modal_for);
-
   const { handleCloseModal } = useModalWrapper();
 
-  const dispatch = useDispatch<AppDispatch>();
-
-  useLayoutEffect(() => {
-    const modal_status: IModalState = { active: true, modalFor: "waiting" };
-    dispatch(setModalStatus(modal_status));
-  }, [dispatch]);
+  const { is_ticket_shown } = useLatestTicket();
 
   return (
     <>
@@ -42,7 +30,7 @@ export default function ApplicantTV() {
         </div>
       </div>
       <ModalWrapper onClick={handleCloseModal}>
-        {<Notifier title={current_view} />}
+        {is_ticket_shown && <Notifier />}
       </ModalWrapper>
     </>
   );
