@@ -12,9 +12,16 @@ export const QueueTicketSchema = z.object({
   window_id: z.string().min(1),
 });
 
+export const QueueServicesSchema = z.array(
+  z.object({
+    id: z.string().min(1),
+    name: z.string(),
+  })
+);
+
 export const QueueServiceSchema = z.object({
   id: z.string().min(1),
-  name: z.enum(["Japan Visa", "Korean Visa", "Ticketing"]),
+  name: z.array(z.string()),
 });
 
 export const QueueWindowSchema = z.object({

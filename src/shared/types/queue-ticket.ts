@@ -3,6 +3,7 @@ import {
   CurrentStatusSchema,
   QueueCallSchema,
   QueueServiceSchema,
+  QueueServicesSchema,
   QueueStatusSchema,
   QueueTicketSchema,
   QueueUpdateSchema,
@@ -14,6 +15,8 @@ export type QueueTicketType = z.infer<typeof QueueTicketSchema>;
 export type QueueTicketListType = QueueTicketType[];
 
 export type IDType = string;
+
+export type QueueServicesType = z.infer<typeof QueueServicesSchema>;
 
 export type QueueServiceType = z.infer<typeof QueueServiceSchema>;
 
