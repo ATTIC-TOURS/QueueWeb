@@ -1,20 +1,33 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useModalWrapper } from "../../../../../../../hooks/useModalWrapper";
 import { useViewableStatus } from "../../../../../../../hooks/useViewableStatus";
-import { IRootState } from "../../../../../../../shared/stores/app";
+import {
+  AppDispatch,
+  IRootState,
+} from "../../../../../../../shared/stores/app";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { QueueUpdateSchema } from "../../../../../../../shared/validators/queue-ticket";
 import { QueueUpdateType } from "../../../../../../../shared/types/queue-ticket";
 import { SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
 import { useEffect } from "react";
 import { useQueueUpdateMutation } from "../../../../../shared/api/queue";
+import { toast } from "sonner";
+import { setModalStatus } from "../../../../../../../shared/stores/modal";
+import { useCurrentStatus } from "../../../../../../../hooks/useCurrentStatus";
+import { useQueueTickets } from "../../../../../../../hooks/useQueueTickets";
 
 export default function StatusModal() {
   const { handleModalClick, close_modal } = useModalWrapper("Done");
 
   const { isViewableStatusLoading, viewableStatus } = useViewableStatus();
 
+  const { refetch: RefetchCurrentStatus } = useCurrentStatus();
+
+  const { refetch: RefetchTickets } = useQueueTickets();
+
   const ticket = useSelector((state: IRootState) => state.ticket);
+
+  const branch_id = useSelector((state: IRootState) => state.branch.id);
 
   const {
     register,
@@ -27,15 +40,23 @@ export default function StatusModal() {
 
   const [$updateStatus] = useQueueUpdateMutation();
 
+  const dispatch = useDispatch<AppDispatch>();
+
+  console.log(viewableStatus, "viewable status");
+
   useEffect(() => {
     if (ticket.id) {
       setValue("queue_id", ticket.id.toString());
     }
   }, [ticket.id, setValue]);
 
-  const handleUpdateStatus: SubmitHandler<QueueUpdateType> = (data) => {
-    $updateStatus(data);
-    window.location.reload();
+  const handleUpdateStatus: SubmitHandler<QueueUpdateType> = async (data) => {
+    await $updateStatus({ ...data, branch_id: branch_id ?? "" });
+    dispatch(setModalStatus({ active: false, modalFor: "Call" }));
+    toast.success(`Ticket ${ticket.queue_no} status updated`);
+
+    RefetchCurrentStatus();
+    RefetchTickets();
   };
 
   const handleError: SubmitErrorHandler<QueueUpdateType> = (errors) => {
