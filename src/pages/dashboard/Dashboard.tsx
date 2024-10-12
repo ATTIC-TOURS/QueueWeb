@@ -26,7 +26,7 @@ export default function Dashboard() {
             <Header />
           </header>
           <section>
-            <div className="p-16 flex justify-around flex-wrap gap-5">
+            <div className="p-2 flex justify-around flex-wrap gap-5">
               <section>
                 <OverviewStatus />
               </section>
