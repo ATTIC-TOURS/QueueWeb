@@ -4,6 +4,7 @@ import {
   CurrentStatusType,
   IDType,
   QueueCallType,
+  QueueServicesType,
   QueueServiceType,
   QueueTicketListType,
   QueueUpdateType,
@@ -22,6 +23,9 @@ export const queueAPI = createApi({
     queue: build.query<QueueTicketListType & RequestError, IDType>({
       query: (branch_id) => `/current_queues/${branch_id}/`,
     }),
+    services: build.query<QueueServicesType & RequestError, void>({
+      query: () => `/services/`,
+    }),
     service: build.query<QueueServiceType & RequestError, IDType>({
       query: (service_id) => `/services/${service_id}/`,
     }),
@@ -34,20 +38,23 @@ export const queueAPI = createApi({
     viewableStatus: build.query<StatusType[] & RequestError, void>({
       query: () => `/viewable_status/`,
     }),
-    queueCall: build.mutation<void & RequestError, QueueCallType>({
-      query: (args) => ({
-        url: `/queue_call/`,
+    queueCall: build.mutation<
+      QueueCallType & RequestError,
+      QueueCallType & { branch_id: IDType }
+    >({
+      query: ({ queue_id, window_id, branch_id }) => ({
+        url: `/queue_call/${branch_id}/${queue_id}/`,
         method: "PATCH",
-        body: args,
+        body: { queue_id, window_id },
         provideTags: ["QueueCall"],
       }),
       invalidatesTags: ["QueueCall"],
     }),
-    queueUpdate: build.mutation<void & RequestError, QueueUpdateType>({
-      query: (args) => ({
-        url: `/queue_update/`,
+    queueUpdate: build.mutation<void & RequestError, QueueUpdateType & {branch_id: IDType}>({
+      query: ({ queue_id, status_id, branch_id }) => ({
+        url: `/queue_update/${branch_id}/`,
         method: "PATCH",
-        body: args,
+        body: { queue_id, status_id },
         provideTags: ["QueueUpdate"],
       }),
       invalidatesTags: ["QueueUpdate"],
@@ -57,6 +64,7 @@ export const queueAPI = createApi({
 
 export const {
   useQueueQuery,
+  useServicesQuery,
   useLazyServiceQuery,
   useLazyWindowQuery,
   useCurrentStatusQuery,
