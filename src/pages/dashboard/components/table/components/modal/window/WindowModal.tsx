@@ -39,12 +39,13 @@ export default function WindowModal() {
 
   const [$queueCall] = useQueueCallMutation();
 
+
+
   const handleCall: SubmitHandler<QueueCallType> = async (data) => {
     await $queueCall({ ...data, branch_id: branch_id ?? "" });
 
     dispatch(setModalStatus({ active: false, modalFor: "Call" }));
     toast.success(`Calling ticket ${ticket.queue_no} `);
-
     refetch();
   };
 

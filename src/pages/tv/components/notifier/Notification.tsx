@@ -1,16 +1,24 @@
-import { useLatestTicket } from "../../../../hooks/useLatestTicket";
+import { useEffect } from "react";
 import { useModalWrapper } from "../../../../hooks/useModalWrapper";
-import { useWindows } from "../../../../hooks/useWindows";
-import Called from "./content/call/Called";
+import { AppDispatch } from "../../../../shared/stores/app";
+import { useDispatch } from "react-redux";
+import { setModalStatus } from "../../../../shared/stores/modal";
+import { WaitingCallType } from "../../../../shared/types/tv";
 
-export default function Notifier() {
+export default function Notifier({ data }: { data: WaitingCallType | null }) {
   const { handleModalClick, close_modal } = useModalWrapper("waiting");
 
-  const { latest_ticket } = useLatestTicket();
+  const dispatch = useDispatch<AppDispatch>();
 
-  const { windows_name } = useWindows();
+  useEffect(() => {
+    if (data) {
+      setTimeout(() => {
+        dispatch(setModalStatus({ active: false, modalFor: "in-progress" }));
+        window.location.reload();
+      }, 3000);
+    }
+  }, [data, dispatch]);
 
-  console.log(latest_ticket, "!!!!!!!");
   return (
     <>
       <div
@@ -19,10 +27,12 @@ export default function Notifier() {
         }`}
         onClick={handleModalClick}
       >
-        <h1 className="text-9xl pb-6">
-          {windows_name(latest_ticket?.window_id ?? "")}
+        <h1 className="pb-6 font-bold text-center text-9xl max-xl-1:text-5xl">
+          {data && data?.window}
         </h1>
-        <h3 className="text-9xl font-bold">{latest_ticket?.queue_no}</h3>
+        <h3 className="font-bold text-center text-9xl max-xl-1:text-5xl">
+          {data && data?.queue_no}
+        </h3>
       </div>
     </>
   );

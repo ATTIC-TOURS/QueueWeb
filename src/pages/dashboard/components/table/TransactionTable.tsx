@@ -41,7 +41,7 @@ export default function TransactionTable() {
     );
 
     setFilteredTickets(filtered);
-  };
+  }
 
   if (!branch_id) return <div>No branch ID available</div>;
   if (!isTicketSuccess) return <div>Loading tickets...</div>;
@@ -123,7 +123,7 @@ export default function TransactionTable() {
                   key={index}
                   className={`border ${
                     item.is_called && !checkIfDone(item.status_id.toString())
-                      ? "bg-slate-500"
+                      ? "bg-slate-500 text-white"
                       : ""
                   }`}
                 >

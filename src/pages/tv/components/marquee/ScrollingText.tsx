@@ -7,7 +7,6 @@ export default function ScrollingText() {
 
   const { data } = useMarqueeQuery(branch_id ?? "");
 
-  console.log(data);
   return (
     <footer
       className="bg-blood-red w-full h-full foot-tv"

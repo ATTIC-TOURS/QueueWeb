@@ -8,7 +8,7 @@ import WaitingQueue from "./components/waiting/WaitingQueue";
 import ModalWrapper from "../../components/wrapper/Wrapper";
 import Notifier from "./components/notifier/Notification";
 import { useModalWrapper } from "../../hooks/useModalWrapper";
-import { useLatestTicket } from "../../hooks/useLatestTicket";
+import { useCallWebSocket } from "../../hooks/useCallWebSocket";
 
 export default function ApplicantTV() {
   const current_view = window.location.href.split("/")[3] as
@@ -17,7 +17,7 @@ export default function ApplicantTV() {
 
   const { handleCloseModal } = useModalWrapper();
 
-  const { is_ticket_shown } = useLatestTicket();
+  const { in_progress_call, called } = useCallWebSocket();
 
   return (
     <>
@@ -30,7 +30,9 @@ export default function ApplicantTV() {
         </div>
       </div>
       <ModalWrapper onClick={handleCloseModal}>
-        {is_ticket_shown && <Notifier />}
+        {in_progress_call && in_progress_call.length > 0 && (
+          <Notifier data={called} />
+        )}
       </ModalWrapper>
     </>
   );

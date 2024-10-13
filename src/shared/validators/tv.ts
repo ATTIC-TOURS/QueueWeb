@@ -6,3 +6,9 @@ export const TVMarqueeSchema = z.array(
     text: z.string(),
   })
 );
+
+export const WaitingCallSchema = z.object({
+  service: z.string(),
+  window: z.string(),
+  queue_no: z.number(),
+});

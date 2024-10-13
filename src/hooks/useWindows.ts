@@ -18,7 +18,9 @@ export function useWindows() {
 
   const windows_name = useCallback(
     (window_id: string) => {
-      return windows.find((window) => window.id === window_id)?.name;
+      return windows.find((window) => {
+        return window.id === window_id;
+      })?.name;
     },
     [windows]
   );
