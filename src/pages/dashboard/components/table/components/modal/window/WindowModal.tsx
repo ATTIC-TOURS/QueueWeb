@@ -14,6 +14,7 @@ import { useQueueCallMutation } from "../../../../../shared/api/queue";
 import { setModalStatus } from "../../../../../../../shared/stores/modal";
 import { toast } from "sonner";
 import { useQueueTickets } from "../../../../../../../hooks/useQueueTickets";
+import { useSoundNotify } from "../../../../../../../hooks/useSoundNotify";
 
 export default function WindowModal() {
   const { handleModalClick, close_modal } = useModalWrapper("Call");
@@ -39,13 +40,15 @@ export default function WindowModal() {
 
   const [$queueCall] = useQueueCallMutation();
 
-
+  const { playAudio } = useSoundNotify();
 
   const handleCall: SubmitHandler<QueueCallType> = async (data) => {
     await $queueCall({ ...data, branch_id: branch_id ?? "" });
 
     dispatch(setModalStatus({ active: false, modalFor: "Call" }));
     toast.success(`Calling ticket ${ticket.queue_no} `);
+
+      playAudio();
     refetch();
   };
 

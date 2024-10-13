@@ -9,6 +9,7 @@ import ModalWrapper from "../../components/wrapper/Wrapper";
 import Notifier from "./components/notifier/Notification";
 import { useModalWrapper } from "../../hooks/useModalWrapper";
 import { useCallWebSocket } from "../../hooks/useCallWebSocket";
+import { useSoundNotify } from "../../hooks/useSoundNotify";
 
 export default function ApplicantTV() {
   const current_view = window.location.href.split("/")[3] as
@@ -18,6 +19,15 @@ export default function ApplicantTV() {
   const { handleCloseModal } = useModalWrapper();
 
   const { in_progress_call, called } = useCallWebSocket();
+
+  const { speak } = useSoundNotify();
+
+  setTimeout(() => {
+    if (called) {
+      console.log("called", called);
+      speak(called);
+    }
+  }, 2500);
 
   return (
     <>

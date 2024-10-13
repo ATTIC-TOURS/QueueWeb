@@ -58,7 +58,6 @@ export function useCallWebSocket() {
       if (!waiting_tickets) return;
 
       const parsed_data: WaitingCallType = JSON.parse(message.data);
-      console.log(parsed_data, "parsed_data");
       const new_list = waiting_tickets.filter(
         (ticket) => ticket.queue_no === parsed_data.queue_no
       );

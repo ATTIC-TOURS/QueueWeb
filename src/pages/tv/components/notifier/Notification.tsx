@@ -15,7 +15,8 @@ export default function Notifier({ data }: { data: WaitingCallType | null }) {
       setTimeout(() => {
         dispatch(setModalStatus({ active: false, modalFor: "in-progress" }));
         window.location.reload();
-      }, 3000);
+
+      }, 5500);
     }
   }, [data, dispatch]);
 

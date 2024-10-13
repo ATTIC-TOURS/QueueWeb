@@ -26,6 +26,7 @@ export default {
         'lg': '768px',
         'xl': '1025px',
         'xl-1': '1280px',
+        'xl-2': '1300px',
       }
     },
   },
