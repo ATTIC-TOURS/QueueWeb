@@ -10,7 +10,11 @@ export default function CurrentStatus() {
         <h1 className="text-3xl font-normal">Now Serving</h1>
         <span className="text-3xl font-normal">{status?.["in-progress"]}</span>
       </div>
-      <div className="py-4 border-r text-center shadow-lg w-48">
+      <div
+        className={`py-4 border-r text-center shadow-lg w-48 ${
+          status && status?.waiting > 0 ? "text-blood-red" : ""
+        }`}
+      >
         <h1 className="text-3xl font-normal">Waiting</h1>
         <span className="text-3xl font-normal">{status?.waiting}</span>
       </div>
