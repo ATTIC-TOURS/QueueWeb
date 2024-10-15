@@ -2,9 +2,12 @@ import { z } from "zod";
 
 export const QueueTicketSchema = z.object({
   branch_id: z.string().min(1),
+  code: z.string(),
   created_at: z.string(),
+  email: z.string().email().nullable(),
   id: z.string().min(1),
   is_called: z.boolean(),
+  name: z.string().min(2),
   queue_no: z.number(),
   service_id: z.string().min(1),
   status_id: z.string().min(1),
