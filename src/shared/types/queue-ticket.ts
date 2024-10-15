@@ -32,6 +32,7 @@ export type ModalTitleType =
   | "Done"
   | "waiting"
   | "in-progress"
+  | "table-filter"
   | null;
 
 export type StatusType = z.infer<typeof QueueStatusSchema>;

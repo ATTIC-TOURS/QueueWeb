@@ -2,13 +2,22 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { authAPI } from "../../pages/login/shared/api/auth";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import branchReducer from "./branch";
-import { persistReducer, persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
+import {
+  persistReducer,
+  persistStore,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
 import { persist_config } from "../../configs/persistor";
 import { queueAPI } from "../../pages/dashboard/shared/api/queue";
 import modalReducer from "./modal";
 import ticketReducer from "./ticket";
+import serviceFilterReducer from "./table-filter";
 import { tvAPI } from "../../pages/tv/shared/api/tv";
-
 
 const reducer = combineReducers({
   [authAPI.reducerPath]: authAPI.reducer,
@@ -17,9 +26,10 @@ const reducer = combineReducers({
   modal: modalReducer,
   ticket: ticketReducer,
   [tvAPI.reducerPath]: tvAPI.reducer,
+  service_filter: serviceFilterReducer,
 });
 
-const persistedReducer = persistReducer(persist_config, reducer)
+const persistedReducer = persistReducer(persist_config, reducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
@@ -28,7 +38,10 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(authAPI.middleware).concat(queueAPI.middleware).concat(tvAPI.middleware),
+    })
+      .concat(authAPI.middleware)
+      .concat(queueAPI.middleware)
+      .concat(tvAPI.middleware),
 });
 
 setupListeners(store.dispatch);

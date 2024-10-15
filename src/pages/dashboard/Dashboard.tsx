@@ -10,6 +10,7 @@ import { useModalWrapper } from "../../hooks/useModalWrapper";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../shared/stores/app";
 import StatusModal from "./components/table/components/modal/status/StatusModal";
+import TableFilter from "./components/table/components/modal/service-filter/TableFilter";
 
 export default function Dashboard() {
   const { handleCloseModal } = useModalWrapper();
@@ -41,8 +42,9 @@ export default function Dashboard() {
         </div>
       </div>
       <ModalWrapper onClick={handleCloseModal}>
-       {modal_for === "Call" && <WindowModal />}
-       {modal_for === "Done" && <StatusModal />}
+        {modal_for === "Call" && <WindowModal />}
+        {modal_for === "Done" && <StatusModal />}
+        {modal_for === "table-filter" && <TableFilter />}
       </ModalWrapper>
     </>
   );

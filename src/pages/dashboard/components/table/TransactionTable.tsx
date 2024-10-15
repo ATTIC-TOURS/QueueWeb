@@ -1,6 +1,8 @@
 import {
   faArrowRotateRight,
   faFilter,
+  faSortDown,
+  faSortUp,
   faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,8 +12,15 @@ import { useWindows } from "../../../../hooks/useWindows";
 import TableActions from "./components/actions/TableActions";
 import { useViewableStatus } from "../../../../hooks/useViewableStatus";
 import { useQueueTickets } from "../../../../hooks/useQueueTickets";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { QueueTicketType } from "../../../../shared/types/queue-ticket";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, IRootState } from "../../../../shared/stores/app";
+import { setModalStatus } from "../../../../shared/stores/modal";
+import {
+  IFilterFor,
+  setFilterFor,
+} from "../../../../shared/stores/table-filter";
 
 export default function TransactionTable() {
   const { isTicketSuccess, tickets, branch_id, refetch, isFetching } =
@@ -27,6 +36,11 @@ export default function TransactionTable() {
     QueueTicketType[] | undefined
   >([]);
 
+  const dispatch = useDispatch<AppDispatch>();
+
+  const filter = useSelector((state: IRootState) => state.service_filter);
+
+  // TODO: Use a custom hook to optimize this
   const checkIfDone = (status_id: string) => {
     const checked = viewableStatus.some(
       (status) => status.id.toString() === status_id
@@ -35,47 +49,110 @@ export default function TransactionTable() {
     return checked;
   };
 
-  const handleServiceFilter = () => {
+  const handleFilter = (title: IFilterFor) => {
+    dispatch(setModalStatus({ active: true, modalFor: "table-filter" }));
+    dispatch(setFilterFor(title));
+  };
+
+  const handleRemoveFilters = () => {
+    setFilteredTickets([]);
+    dispatch(setFilterFor(undefined));
+  };
+
+  useEffect(() => {
+    if (filter.filter_item === "") {
+      setFilteredTickets([]);
+      return;
+    }
     const filtered = tickets?.filter((ticket) =>
-      services_name(ticket.service_id)?.includes("Others")
+      (filter.filter_for === "Service"
+        ? services_name(ticket.service_id)
+        : filter.filter_for === "Window"
+        ? windows_name(ticket.window_id)
+        : []
+      )?.includes(filter.filter_item)
     );
 
     setFilteredTickets(filtered);
-  }
+
+    return () => {
+      setFilteredTickets([]);
+    };
+  }, [filter, services_name, tickets, windows_name]);
+
+  const [is_time_sorted, setIsTimeSorted] = useState(false);
+
+  const handleSortTime = () => {
+    const first_to_last = (filtered_tickets ?? tickets)
+      ?.map((ticket) => ticket.created_at)
+      .sort((a, b) => {
+        setIsTimeSorted(!is_time_sorted);
+        if (is_time_sorted) {
+          return new Date(a).getTime() - new Date(b).getTime();
+        }
+        return new Date(b).getTime() - new Date(a).getTime();
+      })
+      .map((time) => {
+        return tickets?.find((ticket) => ticket.created_at === time);
+      }) as QueueTicketType[];
+
+    setFilteredTickets(first_to_last);
+  };
 
   if (!branch_id) return <div>No branch ID available</div>;
   if (!isTicketSuccess) return <div>Loading tickets...</div>;
   if (isServicesLoading) return <div>Loading services...</div>;
   if (isWindowLoading) return <div>Loading windows...</div>;
 
+  console.log("filtered_tickets", filtered_tickets);
   return (
     <div className="md:px-16 max-md:px-2 mb-5">
       <table className=" w-full">
         <thead className="">
           <tr>
             <th className="py-4">
-              Service
+              Service{" "}
               <FontAwesomeIcon
                 icon={faFilter}
                 size="1x"
                 color="grey"
-                onClick={handleServiceFilter}
+                className="cursor-pointer"
+                onClick={() => handleFilter("Service")}
               />
             </th>
             <th>
-              Queue No
-              {/* // Might have to remove filter for Queue no. */}
-              {/* <FontAwesomeIcon icon={faFilter} size="1x" color="grey" /> */}
+              Queue No{" "}
             </th>
             <th>
-              Visit Time
-              <FontAwesomeIcon icon={faFilter} size="1x" color="grey" />
+              Visit Time{" "}
+              <FontAwesomeIcon
+                icon={is_time_sorted ? faSortUp : faSortDown}
+                size="1x"
+                color="grey"
+                className="cursor-pointer"
+                onClick={handleSortTime}
+              />
             </th>
             <th>
-              Window
-              <FontAwesomeIcon icon={faFilter} size="1x" color="grey" />
+              Window{" "}
+              <FontAwesomeIcon
+                icon={faFilter}
+                size="1x"
+                color="grey"
+                className="cursor-pointer"
+                onClick={() => handleFilter("Window")}
+              />
             </th>
+            <th>Name</th>
             <th className="float-end">
+              {(filtered_tickets ?? []).length > 0 && (
+                <button
+                  className="font-semibold p-1 mr-6 rounded border border-crimson"
+                  onClick={handleRemoveFilters}
+                >
+                  Remove Filters
+                </button>
+              )}
               {isFetching ? (
                 <FontAwesomeIcon
                   icon={faSpinner}
@@ -101,18 +178,19 @@ export default function TransactionTable() {
                   key={index}
                   className={`border ${
                     item.is_called && !checkIfDone(item.status_id.toString())
-                      ? "bg-slate-500"
+                      ? "bg-slate-500 text-white"
                       : ""
                   }`}
                 >
                   <td className="text-center">
                     {services_name(item.service_id)}
                   </td>
-                  <td className="text-center">{item.queue_no}</td>
+                  <td className="text-center">{item.code}</td>
                   <td className="text-center">{FormatTime(item.created_at)}</td>
                   <td className="text-center">
                     {windows_name(item.window_id) ?? "unassigned"}
                   </td>
+                  <td className="text-center">{item.name}</td>
                   <td className="py-3 text-center ">
                     <TableActions ticket={item} />
                   </td>
@@ -130,11 +208,12 @@ export default function TransactionTable() {
                   <td className="text-center">
                     {services_name(item.service_id)}
                   </td>
-                  <td className="text-center">{item.queue_no}</td>
+                  <td className="text-center">{item.code}</td>
                   <td className="text-center">{FormatTime(item.created_at)}</td>
                   <td className="text-center">
                     {windows_name(item.window_id) ?? "unassigned"}
                   </td>
+                  <td className="text-center">{item.name}</td>
                   <td className="py-3 text-center ">
                     <TableActions ticket={item} />
                   </td>
