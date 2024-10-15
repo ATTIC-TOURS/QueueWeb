@@ -17,9 +17,8 @@ export function useServices() {
   const [fetchService, { isLoading: isServicesLoading }] =
     useLazyServiceQuery();
 
-
   useEffect(() => {
-    const fetchServices = async () => {
+    (async () => {
       if (isTicketSuccess && tickets) {
         const service_promises = tickets.map((ticket) =>
           ticket.service_id
@@ -27,15 +26,14 @@ export function useServices() {
             : Promise.resolve(null)
         );
         const fetched_services = await Promise.all(service_promises);
+
         setServices(
           fetched_services.filter(
             (service) => service !== null
           ) as QueueServiceType[]
         );
       }
-    };
-
-    fetchServices();
+    })();
   }, [isTicketSuccess, tickets, fetchService]);
 
   const services_name = useCallback(
