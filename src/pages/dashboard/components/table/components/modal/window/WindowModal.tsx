@@ -46,7 +46,7 @@ export default function WindowModal() {
     await $queueCall({ ...data, branch_id: branch_id ?? "" });
 
     dispatch(setModalStatus({ active: false, modalFor: "Call" }));
-    toast.success(`Calling ticket ${ticket.queue_no} `);
+    toast.success(`Calling ticket ${ticket.code} `);
 
       playAudio();
     refetch();
