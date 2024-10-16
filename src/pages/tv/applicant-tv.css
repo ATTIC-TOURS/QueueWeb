@@ -5,26 +5,6 @@
   background-position: center;
 }
 
-.tv-screen {
-  display: grid;
-  grid-template-areas:
-    "left-tv right-tv"
-    "foot-tv foot-tv";
-  grid-template-columns: 2fr 1fr;
-}
-
-.left-tv {
-  grid-area: left-tv;
-}
-
-.right-tv {
-  grid-area: right-tv;
-}
-
-.foot-tv {
-  grid-area: foot-tv;
-}
-
 .in-prog-list:nth-child(odd) {
   background-color: var(--light-red);
 }
