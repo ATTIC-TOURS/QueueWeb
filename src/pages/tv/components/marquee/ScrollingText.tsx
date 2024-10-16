@@ -9,7 +9,7 @@ export default function ScrollingText() {
 
   return (
     <footer
-      className="bg-blood-red w-full h-full foot-tv"
+      className="bg-blood-red w-full h-16"
       id="scroll-container"
     >
       <div className="text-white-wash font-bold scroll-text flex items-center gap-3 h-full">
