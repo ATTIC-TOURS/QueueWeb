@@ -1,48 +1,64 @@
 import { Helmet } from "react-helmet-async";
 import "./applicant-tv.css";
 
-import AtticVideo from "./components/video/AtticVideo";
 import InProgressQueue from "./components/in-prog/InProgressQueue";
 import ScrollingText from "./components/marquee/ScrollingText";
-import WaitingQueue from "./components/waiting/WaitingQueue";
 import ModalWrapper from "../../components/wrapper/Wrapper";
 import Notifier from "./components/notifier/Notification";
 import { useModalWrapper } from "../../hooks/useModalWrapper";
 import { useCallWebSocket } from "../../hooks/useCallWebSocket";
 import { useSoundNotify } from "../../hooks/useSoundNotify";
 
-export default function ApplicantTV() {
-  const current_view = window.location.href.split("/")[3] as
-    | "waiting"
-    | "in-progress";
+import jvac_logo from "../../assets/images/jvac_logo.png";
+import { useEffect, useState } from "react";
 
+import audio from "../../assets/audio/callingsound.mp3";
+
+export default function ApplicantTV() {
   const { handleCloseModal } = useModalWrapper();
 
-  const { in_progress_call, called } = useCallWebSocket();
+  const { called } = useCallWebSocket();
 
-  const { speak } = useSoundNotify();
+  const [show, setShow] = useState(false);
 
-  setTimeout(() => {
+  const { playAudio } = useSoundNotify();
+
+  useEffect(() => {
     if (called) {
-      console.log("called", called);
-      speak(called);
+      setShow(true);
+      playAudio(called[0]);
     }
-  }, 2500);
+
+    return () => {
+      setShow(false);
+    };
+  }, [called]);
 
   return (
     <>
+    <audio id="audio" src={audio} autoPlay />
       <Helmet title="Applicant TV" />
       <div className="h-screen tv-bg">
-        <div className="tv-screen h-full">
-          <AtticVideo />
-          {current_view === "waiting" ? <WaitingQueue /> : <InProgressQueue />}
-          <ScrollingText />
+        <div className="md:px-9">
+          <img src={jvac_logo} alt="JVAC Logo" className="w-auto h-28" />
         </div>
+        <div className=" grid grid-cols-[2fr,1fr] gap-3 px-2 xl:px-12 h-[calc(100vh-2rem)] md:h-[calc(100vh-11rem)] xl:h-[calc(100vh-11rem)] max-md:grid-cols-1">
+          <div>
+            <iframe
+              className="w-full h-[90%] max-xl:h-[70%]"
+              src="https://www.youtube.com/embed/watch?v=Bnej8INPYhw&list=PLvQ0G7tJfb3zqjWCxdQPrn9kCmmciLWUm&index=1"
+              title="YouTube video player"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            ></iframe>
+          </div>
+          <div>
+            <InProgressQueue now_serving={called} />
+          </div>
+        </div>
+        <ScrollingText />
       </div>
       <ModalWrapper onClick={handleCloseModal}>
-        {in_progress_call && in_progress_call.length > 0 && (
-          <Notifier data={called} />
-        )}
+        {show && <Notifier data={called} />}
       </ModalWrapper>
     </>
   );

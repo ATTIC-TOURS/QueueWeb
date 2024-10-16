@@ -23,19 +23,31 @@ export const useSoundNotify = () => {
 
   const speak = async (data: WaitingCallType | null) => {
 
-    console.log("data", data);
     if (data && utterance) {
-        console.log("data~~~~~~~", data);
-      utterance.text = `${data.service} with ticket no ${data.queue_no} please proceed to ${data.window}`;
+      utterance.text = `Applicant ${data.queue_code} please proceed to ${data.window_name}`;
       window.speechSynthesis.speak(utterance);
     }
   };
 
-  const playAudio = () => {
+  const playAudio = (data: WaitingCallType | null) => {
     const source = new Audio(audio);
 
-    source.play();
+    source.onended = () => {
+      speak(data)
+    }
+
+    const promise = source.play();
+
+    if (promise !== undefined) {
+      promise.then(() => {
+        console.log("Audio played");
+      }).catch(error => {
+        console.log("Audio error", error);
+
+      });
+    }
+
   };
 
-  return { playAudio, speak };
+  return { playAudio };
 };
