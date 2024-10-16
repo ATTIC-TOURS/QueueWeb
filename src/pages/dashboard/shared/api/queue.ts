@@ -16,7 +16,6 @@ export const queueAPI = createApi({
   reducerPath: "queueAPI",
   baseQuery: fetchBaseQuery({
     ...baseQuery,
-    baseUrl: `${import.meta.env.VITE_SERVER_BASE_URL}`,
   }),
   tagTypes: ["Queue", "QueueCall", "QueueUpdate"],
   endpoints: (build) => ({
