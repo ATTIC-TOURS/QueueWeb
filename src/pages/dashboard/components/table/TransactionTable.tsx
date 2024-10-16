@@ -111,8 +111,8 @@ export default function TransactionTable() {
 
   return (
     <div className="md:px-16 max-md:px-2 mb-5">
-      <table className=" w-full">
-        <thead className="">
+      <table className="w-full">
+        <thead>
           <tr>
             <th className="py-4">
               Service{" "}
@@ -160,7 +160,7 @@ export default function TransactionTable() {
                   icon={faSpinner}
                   size="1x"
                   color="grey"
-                  className="float-end"
+                  className="float-end animate-spin"
                 />
               ) : (
                 <FontAwesomeIcon
@@ -168,6 +168,7 @@ export default function TransactionTable() {
                   size="1x"
                   color="grey"
                   onClick={refetch}
+                  className="cursor-pointer"
                 />
               )}
             </th>
