@@ -57,6 +57,7 @@ export default function TransactionTable() {
   const handleRemoveFilters = () => {
     setFilteredTickets([]);
     dispatch(setFilterFor(undefined));
+    setIsTimeSorted(false);
   };
 
   useEffect(() => {
@@ -83,7 +84,11 @@ export default function TransactionTable() {
   const [is_time_sorted, setIsTimeSorted] = useState(false);
 
   const handleSortTime = () => {
-    const first_to_last = (filtered_tickets ?? tickets)
+    const first_to_last = (
+      filtered_tickets && filtered_tickets.length > 0
+        ? filtered_tickets
+        : tickets
+    )
       ?.map((ticket) => ticket.created_at)
       .sort((a, b) => {
         setIsTimeSorted(!is_time_sorted);
@@ -104,7 +109,6 @@ export default function TransactionTable() {
   if (isServicesLoading) return <div>Loading services...</div>;
   if (isWindowLoading) return <div>Loading windows...</div>;
 
-  console.log("filtered_tickets", filtered_tickets);
   return (
     <div className="md:px-16 max-md:px-2 mb-5">
       <table className=" w-full">
@@ -120,9 +124,7 @@ export default function TransactionTable() {
                 onClick={() => handleFilter("Service")}
               />
             </th>
-            <th>
-              Queue No{" "}
-            </th>
+            <th>Queue No </th>
             <th>
               Visit Time{" "}
               <FontAwesomeIcon
