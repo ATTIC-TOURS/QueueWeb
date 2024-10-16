@@ -17,11 +17,7 @@ export const router = createBrowserRouter([
     element: <AuthMiddleware child={<Dashboard />} />,
   },
   {
-    path: "/in-progress",
-    element: <AuthMiddleware child={<ApplicantTV />} />,
-  },
-  {
-    path: "/waiting",
+    path: "/now-serving",
     element: <AuthMiddleware child={<ApplicantTV />} />,
   },
   {
