@@ -2,5 +2,5 @@
 
 ## When using network host
 
-> create `.env` file and use the `.env.example` template
+> create `.env.local` file and use the `.env.local.example` template
 
