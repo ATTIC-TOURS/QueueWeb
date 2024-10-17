@@ -21,10 +21,13 @@ import {
   IFilterFor,
   setFilterFor,
 } from "../../../../shared/stores/table-filter";
+import { useCurrentStatus } from "../../../../hooks/useCurrentStatus";
 
 export default function TransactionTable() {
   const { isTicketSuccess, tickets, branch_id, refetch, isFetching } =
     useQueueTickets();
+
+  const { refetch: RefetchCurrentStatus } = useCurrentStatus();
 
   const { isServicesLoading, services_name } = useServices();
 
@@ -104,6 +107,11 @@ export default function TransactionTable() {
     setFilteredTickets(first_to_last);
   };
 
+  const handleRefetchTable = () => {
+    refetch();
+    RefetchCurrentStatus();
+  };
+
   if (!branch_id) return <div>No branch ID available</div>;
   if (!isTicketSuccess) return <div>Loading tickets...</div>;
   if (isServicesLoading) return <div>Loading services...</div>;
@@ -167,7 +175,7 @@ export default function TransactionTable() {
                   icon={faArrowRotateRight}
                   size="1x"
                   color="grey"
-                  onClick={refetch}
+                  onClick={handleRefetchTable}
                   className="cursor-pointer"
                 />
               )}
