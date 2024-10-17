@@ -3,6 +3,7 @@ import { AppDispatch, IRootState } from "../shared/stores/app";
 import { WaitingCallType } from "../shared/types/tv";
 import { useEffect, useState } from "react";
 import { setModalStatus } from "../shared/stores/modal";
+import { setCalledTickets } from "../shared/stores/called-ticket";
 
 export function useCallWebSocket() {
   const branch_id = useSelector((state: IRootState) => state.branch.id);
@@ -12,6 +13,8 @@ export function useCallWebSocket() {
   const [called, setCalled] = useState<WaitingCallType[]>([]);
 
   const dispatch = useDispatch<AppDispatch>();
+
+  const done_tickets = useSelector((state: IRootState) => state.done_tickets);
 
   useEffect(() => {
     const socket = new WebSocket(
@@ -40,9 +43,13 @@ export function useCallWebSocket() {
         return [parsed_data, ...data];
       });
 
+      console.log(done_tickets)
+
+      dispatch(setCalledTickets(parsed_data));
+
       dispatch(setModalStatus({ active: true, modalFor: "in-progress" }));
     };
-  }, [dispatch, ws]);
+  }, [dispatch, done_tickets, ws]);
 
   return { called };
 }
