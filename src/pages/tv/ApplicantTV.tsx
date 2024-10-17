@@ -10,33 +10,39 @@ import { useCallWebSocket } from "../../hooks/useCallWebSocket";
 import { useSoundNotify } from "../../hooks/useSoundNotify";
 
 import jvac_logo from "../../assets/images/jvac_logo.png";
-import { useEffect, useState } from "react";
-
-import audio from "../../assets/audio/callingsound.mp3";
+import { useMemo, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import { IRootState } from "../../shared/stores/app";
 
 export default function ApplicantTV() {
   const { handleCloseModal } = useModalWrapper();
 
-  const { called } = useCallWebSocket();
-
   const [show, setShow] = useState(false);
+
+  const { called } = useCallWebSocket();
 
   const { playAudio } = useSoundNotify();
 
-  useEffect(() => {
-    if (called) {
-      setShow(true);
-      playAudio(called[0]);
-    }
+  const initial_mount = useRef(true);
 
+  const called_tickets = useSelector(
+    (state: IRootState) => state.called_tickets
+  );
+
+  useMemo(() => {
+    if (initial_mount.current) {
+      initial_mount.current = false;
+    } else if (called_tickets && called_tickets.length > 0) {
+      setShow(true);
+      playAudio(called_tickets[0]);
+    }
     return () => {
       setShow(false);
     };
-  }, [called]);
+  }, [called_tickets]);
 
   return (
     <>
-    <audio id="audio" src={audio} autoPlay />
       <Helmet title="Applicant TV" />
       <div className="h-screen tv-bg">
         <div className="md:px-9">
@@ -46,20 +52,22 @@ export default function ApplicantTV() {
           <div>
             <iframe
               className="w-full h-[90%] max-xl:h-[70%]"
-              src="https://www.youtube.com/embed/watch?v=Bnej8INPYhw&list=PLvQ0G7tJfb3zqjWCxdQPrn9kCmmciLWUm&index=1"
+              src="https://www.youtube.com/embed/videoseries?si=UKD7DsjKgPDjDx0b&amp;list=PLvf9VUdJeGeecJHhDmNzdbkhO2jm2kyqp&amp;loop=1&amp;controls=1"
               title="YouTube video player"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             ></iframe>
           </div>
           <div>
-            <InProgressQueue now_serving={called} />
+            <InProgressQueue now_serving={called_tickets} />
           </div>
         </div>
         <ScrollingText />
       </div>
-      <ModalWrapper onClick={handleCloseModal}>
-        {show && <Notifier data={called} />}
-      </ModalWrapper>
+      {show && (
+        <ModalWrapper onClick={handleCloseModal}>
+          <Notifier data={called_tickets} />
+        </ModalWrapper>
+      )}
     </>
   );
 }
