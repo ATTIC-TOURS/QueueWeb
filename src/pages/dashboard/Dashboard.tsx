@@ -19,7 +19,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <Helmet title="Dashboard" />
+      <Helmet title="Queue Dashboard" />
       <div className="grid grid-cols-[40px,2fr] h-screen max-lg:grid-cols-1">
         <Sidebar />
         <div className="bg-white-wash">
