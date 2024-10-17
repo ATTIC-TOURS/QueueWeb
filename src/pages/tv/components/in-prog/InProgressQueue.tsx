@@ -6,8 +6,8 @@ export default function InProgressQueue({
   now_serving: WaitingCallType[] | null;
 }) {
   return (
-    <article className="max-xl:px-2">
-      <div className="bg-blood-red rounded-b h-[29rem]">
+    <article className="max-xl:px-2 overflow-hidden">
+      <div className="bg-blood-red rounded-b h-[28rem]">
         <div className="bg-blood-red h-16 rounded-t flex justify-center items-center mx-auto shadow-lg">
           <h1 className="text-white-wash font-bold text-4xl">NOW SERVING</h1>
         </div>
