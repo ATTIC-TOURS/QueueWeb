@@ -5,8 +5,10 @@ import { LoginSchema } from "../../../../../shared/validators/login";
 import { useEffect } from "react";
 import { useLoginMutation } from "../../../shared/api/auth";
 import { toast } from "sonner";
-import { useSelector } from "react-redux";
-import { IRootState } from "../../../../../shared/stores/app";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, IRootState } from "../../../../../shared/stores/app";
+import { useNavigate, useLocation } from "react-router-dom";
+import { setModalStatus } from "../../../../../shared/stores/modal";
 
 export default function PasswordForm() {
   const {
@@ -21,7 +23,14 @@ export default function PasswordForm() {
 
   const branch_id = useSelector((state: IRootState) => state.branch.id);
 
-  const [$login, { isLoading, isError, data: res }] = useLoginMutation();
+  const [$login, { isLoading, isError, isSuccess, data: res }] =
+    useLoginMutation();
+
+  const navigate = useNavigate();
+
+  const location = useLocation();
+
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleLogin: SubmitHandler<LoginType> = async (data) => {
     await $login(data);
@@ -39,11 +48,13 @@ export default function PasswordForm() {
 
   useEffect(() => {
     if (res) {
-      if (res.status) {
-        window.location.reload();
+      if (res.status && isSuccess) {
+        const origin = location.state?.from || "/";
+        navigate(origin, { replace: true });
+        dispatch(setModalStatus({ active: false, modalFor: "Login" }));
       } else {
         toast.error("Invalid Password");
-        sessionStorage.removeItem("is_authenticated");
+        sessionStorage.removeItem("auth_session");
         reset();
         if (!branch_id) {
           window.location.reload();
@@ -51,7 +62,16 @@ export default function PasswordForm() {
         setValue("id", branch_id!);
       }
     }
-  }, [res, reset, setValue, branch_id]);
+  }, [
+    res,
+    reset,
+    setValue,
+    branch_id,
+    isSuccess,
+    location.state?.from,
+    navigate,
+    dispatch,
+  ]);
 
   return (
     <>

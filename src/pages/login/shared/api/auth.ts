@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { baseQuery } from "../../../../configs/rtk-query";
 import { BranchesType, LoginType } from "../../../../shared/types/login";
+import { v4 as uuidv4 } from "uuid";
 
 export const authAPI = createApi({
   reducerPath: "authAPI",
@@ -24,13 +25,19 @@ export const authAPI = createApi({
             error: response.error,
           };
         }
-        sessionStorage.setItem("is_authenticated", response.status.toString());
+        const auth_session = {
+          id: uuidv4(),
+          auth: response.status,
+        };
+
+        sessionStorage.setItem("auth_session", JSON.stringify(auth_session));
+
         return response;
       },
     }),
     branches: build.query<BranchesType & RequestError, void>({
-        query: () => `/branches/`,
-    })
+      query: () => `/branches/`,
+    }),
   }),
 });
 

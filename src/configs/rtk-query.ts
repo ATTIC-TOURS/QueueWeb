@@ -5,5 +5,7 @@ export const baseQuery = {
   header: {
     "Content-Type": "application/json",
   },
-  baseUrl: getBaseUrl(),
+  baseUrl: getBaseUrl(
+    `${import.meta.env.VITE_MODE === "development" ? "http" : "https"}`
+  ),
 };

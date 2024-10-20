@@ -19,6 +19,7 @@ import ticketReducer from "./ticket";
 import serviceFilterReducer from "./table-filter";
 import calledTicketsReducer from "./called-ticket";
 import doneTicketsReducer from "./done-tickets";
+import calledByTicketReducer from "./called-by-ticket";
 import { tvAPI } from "../../pages/tv/shared/api/tv";
 
 const reducer = combineReducers({
@@ -31,6 +32,7 @@ const reducer = combineReducers({
   service_filter: serviceFilterReducer,
   called_tickets: calledTicketsReducer,
   done_tickets: doneTicketsReducer,
+  called_by_tickets: calledByTicketReducer,
 });
 
 const persistedReducer = persistReducer(persist_config, reducer);

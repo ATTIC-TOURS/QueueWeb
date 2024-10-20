@@ -22,6 +22,8 @@ import {
   setFilterFor,
 } from "../../../../shared/stores/table-filter";
 import { useCurrentStatus } from "../../../../hooks/useCurrentStatus";
+import { useAuthSession } from "../../../../hooks/useAuthSession";
+import { useCallWebSocket } from "../../../../hooks/useCallWebSocket";
 
 export default function TransactionTable() {
   const { isTicketSuccess, tickets, branch_id, refetch, isFetching } =
@@ -42,6 +44,12 @@ export default function TransactionTable() {
   const dispatch = useDispatch<AppDispatch>();
 
   const filter = useSelector((state: IRootState) => state.service_filter);
+
+  const user_id = useAuthSession().id;
+
+  const called_by = useSelector((state: IRootState) => state.called_by_tickets);
+
+  const { called } = useCallWebSocket();
 
   // TODO: Use a custom hook to optimize this
   const checkIfDone = (status_id: string) => {
@@ -187,7 +195,7 @@ export default function TransactionTable() {
             ? filtered_tickets?.map((item, index) => (
                 <tr
                   key={index}
-                  className={`border ${
+                  className={` ${
                     item.is_called && !checkIfDone(item.status_id.toString())
                       ? "bg-slate-500 text-white"
                       : ""
@@ -210,9 +218,16 @@ export default function TransactionTable() {
             : tickets?.map((item, index) => (
                 <tr
                   key={index}
-                  className={`border ${
-                    item.is_called && !checkIfDone(item.status_id.toString())
+                  className={` ${
+                    item.is_called &&
+                    !checkIfDone(item.status_id.toString()) &&
+                    user_id === called_by[index]?.user_id
                       ? "bg-slate-500 text-white"
+                      : called
+                          .map((index) => index.queue_code)
+                          .includes(item.code) &&
+                        user_id !== called_by[index]?.user_id
+                      ? "bg-rose-pink"
                       : ""
                   }`}
                 >

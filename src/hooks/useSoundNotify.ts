@@ -27,7 +27,7 @@ export const useSoundNotify = () => {
 
   const speak = (data: WaitingCallType | null) => {
     if (data && utterance) {
-      utterance.text = `Applicant ${data.queue_code} please proceed to ${data.window_name}`;
+      utterance.text = `Applicant ${data.name} ${data.queue_code} please proceed to ${data.window_name}`;
       window.speechSynthesis.speak(utterance);
 
       utterance.onend = () => {

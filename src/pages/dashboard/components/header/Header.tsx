@@ -21,6 +21,7 @@ export default function Header() {
           color="black"
           onClick={() => {
             dispatch(clearBranch());
+            sessionStorage.clear();
             window.location.reload();
           }}
         />

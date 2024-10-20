@@ -9,12 +9,14 @@ export default function ScrollingText() {
 
   return (
     <footer
-      className="bg-blood-red w-full h-16"
+      className="bg-blood-red w-full h-16 overflow-hidden fixed bottom-0 left-0"
       id="scroll-container"
     >
-      <div className="text-white-wash font-bold scroll-text flex items-center gap-3 h-full">
+      <div className="scroll-text flex items-center gap-4 h-full whitespace-nowrap">
         {data?.map((marquee, index) => (
-          <h1 key={index}>{marquee.text}</h1>
+          <h1 key={index} className="text-white-wash font-bold text-2xl w-full">
+            {marquee.text}
+          </h1>
         ))}
       </div>
     </footer>

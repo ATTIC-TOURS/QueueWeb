@@ -1,6 +1,6 @@
+import { useLocation, Navigate } from "react-router-dom";
 
 export default function PageNotFound() {
-  return (
-    <div>PageNotFound</div>
-  )
+  const { state } = useLocation();
+  return <Navigate to={state?.pathname || "/"} replace />;
 }
