@@ -219,14 +219,11 @@ export default function TransactionTable() {
                 <tr
                   key={index}
                   className={` ${
-                    item.is_called &&
-                    !checkIfDone(item.status_id.toString()) &&
-                    user_id === called_by[index]?.user_id
+                    called_by.some((ticket) => ticket.queue_code === item.code)
                       ? "bg-slate-500 text-white"
-                      : called
-                          .map((index) => index.queue_code)
-                          .includes(item.code) &&
-                        user_id !== called_by[index]?.user_id
+                      : called.some(
+                          (ticket) => ticket.queue_code === item.code
+                        )
                       ? "bg-rose-pink"
                       : ""
                   }`}
