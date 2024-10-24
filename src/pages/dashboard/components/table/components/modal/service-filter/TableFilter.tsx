@@ -46,13 +46,13 @@ export default function TableFilter() {
   return (
     <div
       onClick={handleModalClick}
-      className={`bg-charcoal shadow rounded w-auto p-3 my-6 mx-auto max-w-3xl ${
+      className={`bg-white-wash shadow rounded w-auto p-3 my-6 mx-auto max-w-3xl ${
         close_modal ? "close-modal-animation" : "modal-animation"
       }`}
     >
       <div className="p-5 flex gap-3 items-center">
         <div className="flex flex-col">
-          <label className="text-white-wash mb-1">Select {filter_for}</label>
+          <label className="mb-1">Select {filter_for}</label>
           <select
             className="bg-white-wash p-2"
             value={selected_item}
