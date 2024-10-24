@@ -10,7 +10,6 @@ import { FormatTime } from "../../../../utils/time-formatter";
 import { useServices } from "../../../../hooks/useServices";
 import { useWindows } from "../../../../hooks/useWindows";
 import TableActions from "./components/actions/TableActions";
-import { useViewableStatus } from "../../../../hooks/useViewableStatus";
 import { useQueueTickets } from "../../../../hooks/useQueueTickets";
 import { useEffect, useState } from "react";
 import { QueueTicketType } from "../../../../shared/types/queue-ticket";
@@ -22,7 +21,6 @@ import {
   setFilterFor,
 } from "../../../../shared/stores/table-filter";
 import { useCurrentStatus } from "../../../../hooks/useCurrentStatus";
-import { useAuthSession } from "../../../../hooks/useAuthSession";
 import { useCallWebSocket } from "../../../../hooks/useCallWebSocket";
 
 export default function TransactionTable() {
@@ -35,8 +33,6 @@ export default function TransactionTable() {
 
   const { isWindowLoading, windows_name } = useWindows();
 
-  const { viewableStatus } = useViewableStatus();
-
   const [filtered_tickets, setFilteredTickets] = useState<
     QueueTicketType[] | undefined
   >([]);
@@ -45,20 +41,11 @@ export default function TransactionTable() {
 
   const filter = useSelector((state: IRootState) => state.service_filter);
 
-  const user_id = useAuthSession().id;
-
   const called_by = useSelector((state: IRootState) => state.called_by_tickets);
 
   const { called } = useCallWebSocket();
 
   // TODO: Use a custom hook to optimize this
-  const checkIfDone = (status_id: string) => {
-    const checked = viewableStatus.some(
-      (status) => status.id.toString() === status_id
-    );
-
-    return checked;
-  };
 
   const handleFilter = (title: IFilterFor) => {
     dispatch(setModalStatus({ active: true, modalFor: "table-filter" }));
@@ -196,8 +183,12 @@ export default function TransactionTable() {
                 <tr
                   key={index}
                   className={` ${
-                    item.is_called && !checkIfDone(item.status_id.toString())
+                    called_by.some((ticket) => ticket.queue_code === item.code)
                       ? "bg-slate-500 text-white"
+                      : called.some(
+                          (ticket) => ticket.queue_code === item.code
+                        )
+                      ? "bg-rose-pink"
                       : ""
                   }`}
                 >
