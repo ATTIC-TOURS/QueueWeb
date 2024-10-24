@@ -24,7 +24,7 @@ export default function Notifier({ data }: { data: WaitingCallType[] | null }) {
         onClick={handleModalClick}
       >
         <div className="h-1/6 flex items-center justify-center shadow-lg w-full p-6 bg-blood-red">
-          <h1 className="font-bold ext-white-wash text-[clamp(3rem,calc(1.5rem+3vw),5rem)] text-center">CALLING!</h1>
+          <h1 className="font-bold ext-white-wash text-[clamp(3rem,calc(1.5rem+3vw),5rem)] text-center">For Servicing</h1>
         </div>
         <div className="grid grid-cols-[1.4fr,0.2fr,1.4fr] h-5/6 px-3 max-xl:grid-cols-1">
           <div className="flex flex-col justify-center items-center h-full text-[clamp(2rem,calc(1rem+4vw),6rem)] overflow-hidden">
