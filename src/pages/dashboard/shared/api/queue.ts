@@ -1,12 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { baseQuery } from "../../../../configs/rtk-query";
 import {
-  CurrentStatusType,
   IDType,
   QueueCallType,
   QueueServicesType,
   QueueServiceType,
-  QueueTicketListType,
   QueueUpdateType,
   QueueWindowListType,
   StatusType,
@@ -19,9 +17,6 @@ export const queueAPI = createApi({
   }),
   tagTypes: ["Queue", "QueueCall", "QueueUpdate"],
   endpoints: (build) => ({
-    queue: build.query<QueueTicketListType & RequestError, IDType>({
-      query: (branch_id) => `/current_queues/${branch_id}/`,
-    }),
     services: build.query<QueueServicesType & RequestError, void>({
       query: () => `/services/`,
     }),
@@ -30,9 +25,6 @@ export const queueAPI = createApi({
     }),
     window: build.query<QueueWindowListType & RequestError, void>({
       query: () => `/windows/`,
-    }),
-    currentStatus: build.query<CurrentStatusType & RequestError, IDType>({
-      query: (branch_id) => `/current_queue_stats/${branch_id}/`,
     }),
     viewableStatus: build.query<StatusType[] & RequestError, void>({
       query: () => `/viewable_status/`,
@@ -62,11 +54,9 @@ export const queueAPI = createApi({
 });
 
 export const {
-  useQueueQuery,
   useServicesQuery,
   useLazyServiceQuery,
   useLazyWindowQuery,
-  useCurrentStatusQuery,
   useLazyViewableStatusQuery,
   useQueueCallMutation,
   useQueueUpdateMutation,

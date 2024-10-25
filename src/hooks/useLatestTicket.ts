@@ -1,18 +1,18 @@
 import { useState, useMemo, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useQueueQuery } from "../pages/dashboard/shared/api/queue";
-import { AppDispatch, IRootState } from "../shared/stores/app";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../shared/stores/app";
 import { IModalState, setModalStatus } from "../shared/stores/modal";
+import { useQueueTickets } from "./useQueueTickets";
 
 export const useLatestTicket = () => {
-  const branch_id = useSelector((state: IRootState) => state.branch.id);
-  const { data: new_ticket, isSuccess } = useQueueQuery(branch_id ?? "");
   const [is_ticket_shown, setIsTicketShown] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
 
+  const { tickets } = useQueueTickets();
+
   const latest_ticket = useMemo(() => {
-    if (isSuccess && new_ticket && new_ticket.length > 0) {
-      const calledTickets = new_ticket.filter((ticket) => ticket.is_called);
+    if (tickets && tickets.length > 0) {
+      const calledTickets = tickets.filter((ticket) => ticket.is_called);
 
       if (calledTickets.length === 0) {
         return null;
@@ -28,7 +28,7 @@ export const useLatestTicket = () => {
       return latest_called_ticket;
     }
     return null;
-  }, [isSuccess, new_ticket]);
+  }, [tickets]);
 
   useEffect(() => {
     if (latest_ticket) {

@@ -1,25 +1,18 @@
-import { useSelector } from "react-redux";
-import {
-  useLazyServiceQuery,
-  useQueueQuery,
-} from "../pages/dashboard/shared/api/queue";
-import { IRootState } from "../shared/stores/app";
+import { useLazyServiceQuery } from "../pages/dashboard/shared/api/queue";
 import { useEffect, useCallback, useState } from "react";
 import { QueueServiceType } from "../shared/types/queue-ticket";
+import { useQueueTickets } from "./useQueueTickets";
 
 export function useServices() {
-  const id = useSelector((state: IRootState) => state.branch.id);
-
   const [services, setServices] = useState<QueueServiceType[]>([]);
 
-  const { data: tickets, isSuccess: isTicketSuccess } = useQueueQuery(id ?? "");
-
+  const { tickets } = useQueueTickets();
   const [fetchService, { isLoading: isServicesLoading }] =
     useLazyServiceQuery();
 
   useEffect(() => {
     (async () => {
-      if (isTicketSuccess && tickets) {
+      if (tickets) {
         const service_promises = tickets.map((ticket) =>
           ticket.service_id
             ? fetchService(ticket.service_id).unwrap()
@@ -34,7 +27,7 @@ export function useServices() {
         );
       }
     })();
-  }, [isTicketSuccess, tickets, fetchService]);
+  }, [tickets, fetchService]);
 
   const services_name = useCallback(
     (service_id: string) => {

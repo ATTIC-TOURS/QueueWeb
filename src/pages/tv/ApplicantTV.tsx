@@ -10,41 +10,27 @@ import { useCallWebSocket } from "../../hooks/useCallWebSocket";
 import { useSoundNotify } from "../../hooks/useSoundNotify";
 
 import jvac_logo from "../../assets/images/jvac_logo.png";
-import { useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, IRootState } from "../../shared/stores/app";
 import { setModalStatus } from "../../shared/stores/modal";
+import { useEffect } from "react";
 
 export default function ApplicantTV() {
   const { handleCloseModal } = useModalWrapper();
-
-  const [show, setShow] = useState(false);
-
-  useCallWebSocket();
+  const { called } = useCallWebSocket();
 
   const { playAudio } = useSoundNotify();
 
-  const initial_mount = useRef(true);
+  const modal_active = useSelector((state: IRootState) => state.modal.active);
 
-  const called_tickets = useSelector(
-    (state: IRootState) => state.called_tickets
-  );
   const dispatch = useDispatch<AppDispatch>();
 
-  useMemo(() => {
-    if (initial_mount.current) {
-      initial_mount.current = false;
-    } else if (called_tickets && called_tickets.length > 0) {
-      setShow(true);
-      playAudio(called_tickets[0]);
-      dispatch(setModalStatus({ active: true, modalFor: "in-progress" }));
-
+  useEffect(() => {
+    if (called) {
+      playAudio(called);
+      dispatch(setModalStatus({ active: true, modalFor: "Call" }));
     }
-    return () => {
-      setShow(false);
-    };
-  }, [called_tickets]);
-
+  }, [called]);
   return (
     <>
       <Helmet title="Applicant TV" />
@@ -62,14 +48,14 @@ export default function ApplicantTV() {
             ></iframe>
           </div>
           <div className="flex-initial w-full xl:w-3/12">
-            <InProgressQueue now_serving={called_tickets} />
+            <InProgressQueue />
           </div>
         </main>
         <ScrollingText />
       </div>
-      {show && (
+      {modal_active && (
         <ModalWrapper onClick={handleCloseModal}>
-          <Notifier data={called_tickets} />
+          <Notifier details={called} />
         </ModalWrapper>
       )}
     </>

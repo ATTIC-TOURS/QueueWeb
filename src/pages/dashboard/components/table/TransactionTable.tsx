@@ -1,9 +1,7 @@
 import {
-  faArrowRotateRight,
   faFilter,
   faSortDown,
   faSortUp,
-  faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FormatTime } from "../../../../utils/time-formatter";
@@ -20,18 +18,13 @@ import {
   IFilterFor,
   setFilterFor,
 } from "../../../../shared/stores/table-filter";
-import { useCurrentStatus } from "../../../../hooks/useCurrentStatus";
-import { useCallWebSocket } from "../../../../hooks/useCallWebSocket";
 
 export default function TransactionTable() {
-  const { isTicketSuccess, tickets, branch_id, refetch, isFetching } =
-    useQueueTickets();
+  const { tickets } = useQueueTickets();
 
-  const { refetch: RefetchCurrentStatus } = useCurrentStatus();
+  const { services_name } = useServices();
 
-  const { isServicesLoading, services_name } = useServices();
-
-  const { isWindowLoading, windows_name } = useWindows();
+  const { windows_name } = useWindows();
 
   const [filtered_tickets, setFilteredTickets] = useState<
     QueueTicketType[] | undefined
@@ -42,8 +35,6 @@ export default function TransactionTable() {
   const filter = useSelector((state: IRootState) => state.service_filter);
 
   const called_by = useSelector((state: IRootState) => state.called_by_tickets);
-
-  const { called } = useCallWebSocket();
 
   // TODO: Use a custom hook to optimize this
 
@@ -102,16 +93,6 @@ export default function TransactionTable() {
     setFilteredTickets(first_to_last);
   };
 
-  const handleRefetchTable = () => {
-    refetch();
-    RefetchCurrentStatus();
-  };
-
-  if (!branch_id) return <div>No branch ID available</div>;
-  if (!isTicketSuccess) return <div>Loading tickets...</div>;
-  if (isServicesLoading) return <div>Loading services...</div>;
-  if (isWindowLoading) return <div>Loading windows...</div>;
-
   return (
     <div className="md:px-16 max-md:px-2 mb-5">
       <table className="w-full">
@@ -158,22 +139,6 @@ export default function TransactionTable() {
                   Remove Filters
                 </button>
               )}
-              {isFetching ? (
-                <FontAwesomeIcon
-                  icon={faSpinner}
-                  size="1x"
-                  color="grey"
-                  className="float-end animate-spin"
-                />
-              ) : (
-                <FontAwesomeIcon
-                  icon={faArrowRotateRight}
-                  size="1x"
-                  color="grey"
-                  onClick={handleRefetchTable}
-                  className="cursor-pointer"
-                />
-              )}
             </th>
           </tr>
         </thead>
@@ -185,10 +150,6 @@ export default function TransactionTable() {
                   className={` ${
                     called_by.some((ticket) => ticket.queue_code === item.code)
                       ? "bg-slate-500 text-white"
-                      : called.some(
-                          (ticket) => ticket.queue_code === item.code
-                        )
-                      ? "bg-rose-pink"
                       : ""
                   }`}
                 >
@@ -212,10 +173,6 @@ export default function TransactionTable() {
                   className={` ${
                     called_by.some((ticket) => ticket.queue_code === item.code)
                       ? "bg-slate-500 text-white"
-                      : called.some(
-                          (ticket) => ticket.queue_code === item.code
-                        )
-                      ? "bg-rose-pink"
                       : ""
                   }`}
                 >

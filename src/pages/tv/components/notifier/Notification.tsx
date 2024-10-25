@@ -1,19 +1,14 @@
-import { useEffect, useState } from "react";
 import { useModalWrapper } from "../../../../hooks/useModalWrapper";
 import { WaitingCallType } from "../../../../shared/types/tv";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
-export default function Notifier({ data }: { data: WaitingCallType[] | null }) {
+export default function Notifier({
+  details,
+}: {
+  details: WaitingCallType | undefined;
+}) {
   const { handleModalClick, close_modal } = useModalWrapper();
-
-  const [details, setDetails] = useState<WaitingCallType>();
-
-  useEffect(() => {
-    if (data) {
-      setDetails(data[0]);
-    }
-  }, [data]);
 
   return (
     <>
@@ -24,7 +19,9 @@ export default function Notifier({ data }: { data: WaitingCallType[] | null }) {
         onClick={handleModalClick}
       >
         <div className="h-1/6 flex items-center justify-center shadow-lg w-full p-6 bg-blood-red">
-          <h1 className="font-bold ext-white-wash text-[clamp(3rem,calc(1.5rem+3vw),5rem)] text-center">For Servicing</h1>
+          <h1 className="font-bold ext-white-wash text-[clamp(3rem,calc(1.5rem+3vw),5rem)] text-center">
+            For Servicing
+          </h1>
         </div>
         <div className="grid grid-cols-[1.4fr,0.2fr,1.4fr] h-5/6 px-3 max-xl:grid-cols-1">
           <div className="flex flex-col justify-center items-center h-full text-[clamp(2rem,calc(1rem+4vw),6rem)] overflow-hidden">

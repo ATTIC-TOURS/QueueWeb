@@ -1,20 +1,24 @@
-import { useSelector } from "react-redux";
-import { useQueueQuery } from "../pages/dashboard/shared/api/queue";
-import { IRootState } from "../shared/stores/app";
+import { useEffect, useState } from "react";
+import { QueueTicketType } from "../shared/types/queue-ticket";
+import { useWebSocket } from "./useWebSocket";
 
 export function useQueueTickets() {
-  const branch_id = useSelector((state: IRootState) => state.branch.id);
-    
+  const { ws } = useWebSocket({ type: "controller" });
 
-  const { data: tickets, isSuccess: isTicketSuccess, refetch, isFetching } = useQueueQuery(branch_id ?? "");
+  const [tickets, setTickets] = useState<QueueTicketType[]>();
+  useEffect(() => {
+    if (!ws) return;
 
-  const waiting_tickets = tickets?.filter((ticket) => 
-    ticket.status_id.toString() === "4");
+    ws.onmessage = (message) => {
+      const parsed_data: QueueTicketType[] = JSON.parse(message.data);
 
-  const in_progress_tickets = tickets?.filter((ticket) => 
-    ticket.is_called && ticket.status_id.toString() === "4");
+      setTickets(parsed_data);
+    };
 
-    
+    return () => {
+      ws.close();
+    };
+  }, [ws]);
 
-    return { tickets, isTicketSuccess, refetch, branch_id, isFetching, waiting_tickets, in_progress_tickets };
+  return { tickets };
 }

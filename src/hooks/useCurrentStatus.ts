@@ -1,11 +1,24 @@
-import { useSelector } from "react-redux";
-import { IRootState } from "../shared/stores/app";
-import { useCurrentStatusQuery } from "../pages/dashboard/shared/api/queue";
+import { useEffect, useState } from "react";
+import { useWebSocket } from "./useWebSocket";
+import { CurrentStatusType } from "../shared/types/queue-ticket";
 
 export function useCurrentStatus() {
-  const id = useSelector((state: IRootState) => state.branch.id);
+  const { ws } = useWebSocket({ type: "stats" });
 
-  const { data: status, isSuccess: isCurrentStatusSuccess, refetch } = useCurrentStatusQuery(id ?? "");
+  const [stats, setStats] = useState<CurrentStatusType>();
+  useEffect(() => {
+    if (!ws) return;
 
-  return { status, isCurrentStatusSuccess, refetch};
+    ws.onmessage = (message) => {
+      const parsed_data: CurrentStatusType = JSON.parse(message.data);
+
+      setStats(parsed_data);
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, [ws]);
+
+  return { stats };
 }

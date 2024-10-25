@@ -1,18 +1,11 @@
-import { WaitingCallType } from "../../../../shared/types/tv";
+import { useNowServing } from "../../../../hooks/useNowServing";
+import { useWindows } from "../../../../hooks/useWindows";
 
-export default function InProgressQueue({
-  now_serving,
-}: {
-  now_serving: WaitingCallType[] | null;
-}) {
-  const formattedWindowName = (window_name: string) => {
-    const window = window_name.split(" ");
+export default function InProgressQueue() {
+  const { now_serving } = useNowServing();
 
-    if (window[0] === "Window") {
-      return window[1];
-    }
-    return window_name;
-  };
+  const { windows_name } = useWindows();
+
   return (
     <article className="max-xl:px-2 overflow-hidden">
       <div className="bg-blood-red rounded-b h-[28rem]">
@@ -32,10 +25,10 @@ export default function InProgressQueue({
             {now_serving?.map((ticket, index) => (
               <tr key={index} className="py-2 in-prog-list">
                 <td className="text-white-wash text-center text-4xl font-bold border-r-2 py-2">
-                  {ticket.queue_code}
+                  {ticket.code}
                 </td>
                 <td className="text-white-wash text-center text-4xl">
-                  {formattedWindowName(ticket.window_name)}
+                  {windows_name(ticket.window_id)}
                 </td>
               </tr>
             ))}

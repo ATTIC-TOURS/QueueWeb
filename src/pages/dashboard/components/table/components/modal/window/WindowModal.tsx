@@ -13,7 +13,6 @@ import { useEffect } from "react";
 import { useQueueCallMutation } from "../../../../../shared/api/queue";
 import { setModalStatus } from "../../../../../../../shared/stores/modal";
 import { toast } from "sonner";
-import { useQueueTickets } from "../../../../../../../hooks/useQueueTickets";
 import { useAuthSession } from "../../../../../../../hooks/useAuthSession";
 import { setCalledByTickets } from "../../../../../../../shared/stores/called-by-ticket";
 
@@ -21,8 +20,6 @@ export default function WindowModal() {
   const { handleModalClick, close_modal } = useModalWrapper("Call");
 
   const { windows, windows_name, isWindowLoading } = useWindows();
-
-  const { refetch } = useQueueTickets();
 
   const ticket = useSelector((state: IRootState) => state.ticket);
 
@@ -39,6 +36,10 @@ export default function WindowModal() {
     handleSubmit,
   } = useForm<QueueCallType>({
     resolver: zodResolver(QueueCallSchema),
+    defaultValues: {
+      queue_id: ticket.id.toString(),
+      window_id: "1",
+    }
   });
 
   const [$queueCall] = useQueueCallMutation();
@@ -49,7 +50,6 @@ export default function WindowModal() {
     dispatch(setModalStatus({ active: false, modalFor: "Call" }));
     toast.success(`Calling ticket ${ticket.code} `);
     dispatch(setCalledByTickets({ queue_code: ticket.code, user_id: user_id }));
-    refetch();
   };
 
   const handleError: SubmitErrorHandler<QueueCallType> = (errors) => {

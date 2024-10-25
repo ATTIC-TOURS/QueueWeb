@@ -13,17 +13,11 @@ import { useEffect } from "react";
 import { useQueueUpdateMutation } from "../../../../../shared/api/queue";
 import { toast } from "sonner";
 import { setModalStatus } from "../../../../../../../shared/stores/modal";
-import { useCurrentStatus } from "../../../../../../../hooks/useCurrentStatus";
-import { useQueueTickets } from "../../../../../../../hooks/useQueueTickets";
 
 export default function StatusModal() {
   const { handleModalClick, close_modal } = useModalWrapper("Done");
 
   const { isViewableStatusLoading, viewableStatus } = useViewableStatus();
-
-  const { refetch: RefetchCurrentStatus } = useCurrentStatus();
-
-  const { refetch: RefetchTickets } = useQueueTickets();
 
   const ticket = useSelector((state: IRootState) => state.ticket);
 
@@ -54,9 +48,6 @@ export default function StatusModal() {
     await $updateStatus({ ...data, branch_id: branch_id ?? "" });
     dispatch(setModalStatus({ active: false, modalFor: "Call" }));
     toast.success(`Ticket ${ticket.queue_no} status updated`);
-
-    RefetchCurrentStatus();
-    RefetchTickets();
   };
 
   const handleError: SubmitErrorHandler<QueueUpdateType> = (errors) => {
