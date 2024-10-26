@@ -38,7 +38,7 @@ export default function WindowModal() {
     resolver: zodResolver(QueueCallSchema),
     defaultValues: {
       queue_id: ticket.id.toString(),
-      window_id: "1",
+      window_id: ticket.window_id?.toString() ?? "1",
     }
   });
 
