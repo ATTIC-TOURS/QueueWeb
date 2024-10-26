@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useWebSocket } from "./useWebSocket";
 import { NowServingListType, NowServingType } from "../shared/types/tv";
+import { useCallWebSocket } from "./useCallWebSocket";
 
 export function useNowServing() {
   const { ws } = useWebSocket({ type: "in-progress" });
@@ -8,6 +9,8 @@ export function useNowServing() {
   const [now_serving, setNowServing] = useState<NowServingListType | null>(
     null
   );
+
+  const { called } = useCallWebSocket();
 
   function NowServingSorter(a: NowServingType, b: NowServingType) {
     const item_a = new Date(a.updated_at);
@@ -29,7 +32,7 @@ export function useNowServing() {
         ws.close();
       };
     };
-  }, [ws]);
+  }, [ws, called]);
 
   return { now_serving };
 }
