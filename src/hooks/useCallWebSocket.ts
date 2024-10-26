@@ -13,7 +13,6 @@ export function useCallWebSocket() {
     ws.onmessage = (message) => {
       const data = JSON.parse(message.data);
 
-      console.log(data);
       setCalled(data);
     };
   }, [ws]);
