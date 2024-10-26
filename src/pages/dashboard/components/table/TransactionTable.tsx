@@ -18,6 +18,8 @@ import {
   IFilterFor,
   setFilterFor,
 } from "../../../../shared/stores/table-filter";
+import { useNowServing } from "../../../../hooks/useNowServing";
+import { NowServingListType } from "../../../../shared/types/tv";
 
 export default function TransactionTable() {
   const { tickets } = useQueueTickets();
@@ -35,6 +37,10 @@ export default function TransactionTable() {
   const filter = useSelector((state: IRootState) => state.service_filter);
 
   const called_by = useSelector((state: IRootState) => state.called_by_tickets);
+
+  const { now_serving } = useNowServing();
+
+  const [in_progress, setInProgress] = useState<NowServingListType | null>();
 
   // TODO: Use a custom hook to optimize this
 
@@ -93,6 +99,16 @@ export default function TransactionTable() {
     setFilteredTickets(first_to_last);
   };
 
+  useEffect(() => {
+    if (now_serving && now_serving.length > 0) {
+      setInProgress(now_serving);
+    }
+
+    return () => {
+      setInProgress(null);
+    };
+  }, [now_serving]);
+
   return (
     <div className="md:px-16 max-md:px-2 mb-5">
       <table className="w-full">
@@ -148,8 +164,20 @@ export default function TransactionTable() {
                 <tr
                   key={index}
                   className={` ${
-                    called_by.some((ticket) => ticket.queue_code === item.code)
+                    called_by.some(
+                      (ticket) => ticket.queue_code === item.code
+                    ) &&
+                    (now_serving?.some(
+                      (serving) => serving.code === item.code
+                    ) ||
+                      in_progress?.some(
+                        (serving) => serving.code === item.code
+                      ))
                       ? "bg-slate-500 text-white"
+                      : in_progress?.some(
+                          (serving) => serving.code === item.code
+                        )
+                      ? "bg-rose-pink"
                       : ""
                   }`}
                 >
@@ -171,8 +199,20 @@ export default function TransactionTable() {
                 <tr
                   key={index}
                   className={` ${
-                    called_by.some((ticket) => ticket.queue_code === item.code)
+                    called_by.some(
+                      (ticket) => ticket.queue_code === item.code
+                    ) &&
+                    (now_serving?.some(
+                      (serving) => serving.code === item.code
+                    ) ||
+                      in_progress?.some(
+                        (serving) => serving.code === item.code
+                      ))
                       ? "bg-slate-500 text-white"
+                      : in_progress?.some(
+                          (serving) => serving.code === item.code
+                        )
+                      ? "bg-rose-pink"
                       : ""
                   }`}
                 >
