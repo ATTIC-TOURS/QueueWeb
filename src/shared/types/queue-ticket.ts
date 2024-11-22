@@ -2,6 +2,8 @@ import { z } from "zod";
 import {
   CurrentStatusSchema,
   QueueCallSchema,
+  QueueCategoriesSchema,
+  QueueCategorySchema,
   QueueServiceSchema,
   QueueServicesSchema,
   QueueStatusSchema,
@@ -15,6 +17,10 @@ export type QueueTicketType = z.infer<typeof QueueTicketSchema>;
 export type QueueTicketListType = QueueTicketType[];
 
 export type IDType = string;
+
+export type QueueCategoriesType = z.infer<typeof QueueCategoriesSchema>;
+
+export type QueueCategoryType = z.infer<typeof QueueCategorySchema>;
 
 export type QueueServicesType = z.infer<typeof QueueServicesSchema>;
 

@@ -13,18 +13,37 @@ export const QueueTicketSchema = z.object({
   status_id: z.string().min(1),
   updated_at: z.string(),
   window_id: z.string().min(1),
+  category_id: z.string(),
 });
 
-export const QueueServicesSchema = z.array(
+export const QueueCategoriesSchema = z.array(
   z.object({
+    display_name: z.string(),
     id: z.string().min(1),
     name: z.string(),
   })
 );
 
+export const QueueCategorySchema = z.object({
+  display_name: z.string(),
+  id: z.string().min(1),
+  name: z.string(),
+});
+
+export const QueueServicesSchema = z.array(
+  z.object({
+    category_id: z.string().min(1),
+    id: z.string().min(1),
+    name: z.string(),
+    service_type_id: z.string().min(1),
+  })
+);
+
 export const QueueServiceSchema = z.object({
+  category_id: z.string().min(1),
   id: z.string().min(1),
   name: z.array(z.string()),
+  service_type_id: z.string().min(1),
 });
 
 export const QueueWindowSchema = z.object({
