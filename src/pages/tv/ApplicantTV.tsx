@@ -9,7 +9,7 @@ import { useModalWrapper } from "../../hooks/useModalWrapper";
 import { useCallWebSocket } from "../../hooks/useCallWebSocket";
 import { useSoundNotify } from "../../hooks/useSoundNotify";
 
-import jvac_logo from "../../assets/images/jvac_logo.png";
+import logo from "../../assets/images/attic-logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, IRootState } from "../../shared/stores/app";
 import { setModalStatus } from "../../shared/stores/modal";
@@ -36,7 +36,7 @@ export default function ApplicantTV() {
       <Helmet title="Applicant TV" />
       <div className="min-h-screen flex flex-col tv-bg">
         <div className="md:px-9">
-          <img src={jvac_logo} alt="JVAC Logo" className="w-auto h-28" />
+          <img src={logo} alt="Logo" className="w-auto h-28" />
         </div>
         <main className=" flex flex-wrap justify-center gap-3 p-2 flex-grow max-sm:mb-24">
           <div className="flex-initial w-full xl:w-8/12">
