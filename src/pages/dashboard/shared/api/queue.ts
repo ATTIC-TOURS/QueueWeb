@@ -3,6 +3,8 @@ import { baseQuery } from "../../../../configs/rtk-query";
 import {
   IDType,
   QueueCallType,
+  QueueCategoriesType,
+  QueueCategoryType,
   QueueServicesType,
   QueueServiceType,
   QueueUpdateType,
@@ -22,6 +24,12 @@ export const queueAPI = createApi({
     }),
     service: build.query<QueueServiceType & RequestError, IDType>({
       query: (service_id) => `/services/${service_id}/`,
+    }),
+    categories: build.query<QueueCategoriesType & RequestError, void>({
+      query: () => `/categories/`,
+    }),
+    category: build.query<QueueCategoryType & RequestError, IDType>({
+      query: (category_id) => `/categories/${category_id}/`,
     }),
     window: build.query<QueueWindowListType & RequestError, void>({
       query: () => `/windows/`,
@@ -56,6 +64,8 @@ export const queueAPI = createApi({
 export const {
   useServicesQuery,
   useLazyServiceQuery,
+  useCategoriesQuery,
+  useLazyCategoryQuery,
   useLazyWindowQuery,
   useLazyViewableStatusQuery,
   useQueueCallMutation,

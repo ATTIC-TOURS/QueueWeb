@@ -4,8 +4,11 @@ import {
   AppDispatch,
   IRootState,
 } from "../../../../../../../shared/stores/app";
-import { useServicesQuery } from "../../../../../shared/api/queue";
-import { setFilterItem} from "../../../../../../../shared/stores/table-filter";
+import {
+  useCategoriesQuery,
+  useServicesQuery,
+} from "../../../../../shared/api/queue";
+import { setFilterItem } from "../../../../../../../shared/stores/table-filter";
 import { useMemo, useState } from "react";
 import { setModalStatus } from "../../../../../../../shared/stores/modal";
 import { useWindows } from "../../../../../../../hooks/useWindows";
@@ -17,8 +20,10 @@ export default function TableFilter() {
 
   const { windows } = useWindows();
 
+  const { data: categories } = useCategoriesQuery();
+
   const filter_for = useSelector(
-    (state: IRootState) => state.service_filter.filter_for
+    (state: IRootState) => state.table_filter.filter_for
   );
 
   const dispatch = useDispatch<AppDispatch>();
@@ -34,14 +39,15 @@ export default function TableFilter() {
     dispatch(setModalStatus({ active: false, modalFor: "table-filter" }));
   };
 
-
   const data = useMemo(() => {
     if (filter_for === "Service") {
       return services;
     } else if (filter_for === "Window") {
       return windows;
+    } else if (filter_for === "Category") {
+      return categories;
     }
-  }, [filter_for, services, windows]);
+  }, [categories, filter_for, services, windows]);
 
   return (
     <div

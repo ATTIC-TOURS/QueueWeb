@@ -20,11 +20,14 @@ import {
 } from "../../../../shared/stores/table-filter";
 import { useNowServing } from "../../../../hooks/useNowServing";
 import { NowServingListType } from "../../../../shared/types/tv";
+import { useCategories } from "../../../../hooks/useCategories";
 
 export default function TransactionTable() {
   const { tickets } = useQueueTickets();
 
   const { services_name } = useServices();
+
+  const { categories_name } = useCategories();
 
   const { windows_name } = useWindows();
 
@@ -34,7 +37,7 @@ export default function TransactionTable() {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  const filter = useSelector((state: IRootState) => state.service_filter);
+  const filter = useSelector((state: IRootState) => state.table_filter);
 
   const called_by = useSelector((state: IRootState) => state.called_by_tickets);
 
@@ -115,6 +118,16 @@ export default function TransactionTable() {
         <thead>
           <tr>
             <th className="py-4">
+              Category{" "}
+              <FontAwesomeIcon
+                icon={faFilter}
+                size="1x"
+                color="grey"
+                className="cursor-pointer"
+                onClick={() => handleFilter("Category")}
+              />
+            </th>
+            <th className="py-4">
               Service{" "}
               <FontAwesomeIcon
                 icon={faFilter}
@@ -182,6 +195,9 @@ export default function TransactionTable() {
                   }`}
                 >
                   <td className="text-center">
+                    {categories_name(item.category_id)}
+                  </td>
+                  <td className="text-center">
                     {services_name(item.service_id)}
                   </td>
                   <td className="text-center">{item.code}</td>
@@ -216,6 +232,9 @@ export default function TransactionTable() {
                       : ""
                   }`}
                 >
+                  <td className="text-center">
+                    {categories_name(item.category_id)}
+                  </td>
                   <td className="text-center">
                     {services_name(item.service_id)}
                   </td>
