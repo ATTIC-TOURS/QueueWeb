@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export type IFilterFor = "Service" | "Window" | undefined;
+export type IFilterFor = "Category" | "Service" | "Window" | undefined;
 
 interface IFilterState {
   filter_for: IFilterFor;
@@ -13,7 +13,7 @@ const initialState: IFilterState = {
 };
 
 export const serviceFilterSlice = createSlice({
-  name: "service-filter",
+  name: "table-filter",
   initialState,
   reducers: {
     setFilterFor: (state, action: PayloadAction<IFilterFor>) => {

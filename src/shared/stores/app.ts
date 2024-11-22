@@ -16,7 +16,7 @@ import { persist_config } from "../../configs/persistor";
 import { queueAPI } from "../../pages/dashboard/shared/api/queue";
 import modalReducer from "./modal";
 import ticketReducer from "./ticket";
-import serviceFilterReducer from "./table-filter";
+import tableFilterReducer from "./table-filter";
 import calledTicketsReducer from "./called-ticket";
 import doneTicketsReducer from "./done-tickets";
 import calledByTicketReducer from "./called-by-ticket";
@@ -29,7 +29,7 @@ const reducer = combineReducers({
   modal: modalReducer,
   ticket: ticketReducer,
   [tvAPI.reducerPath]: tvAPI.reducer,
-  service_filter: serviceFilterReducer,
+  table_filter: tableFilterReducer,
   called_tickets: calledTicketsReducer,
   done_tickets: doneTicketsReducer,
   called_by_tickets: calledByTicketReducer,
