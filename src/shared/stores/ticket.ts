@@ -3,6 +3,7 @@ import { QueueTicketType } from "../types/queue-ticket";
 
 const initialState: QueueTicketType = {
   branch_id: "",
+  category_id: "",
   code: "",
   email: null,
   name: "",
